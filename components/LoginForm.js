@@ -41,7 +41,7 @@ const LoginForm = ({navigation}) => {
         onChangeText={(txt) => handleInputChange('password', txt)}
         secureTextEntry={true}
       />
-      <Button title="Login" onPress={doLogin} loading={loading} />
+      <Button title="Login" buttonStyle={{backgroundColor: '#F54029'}} onPress={doLogin} loading={loading} />
     </View>
   );
 };

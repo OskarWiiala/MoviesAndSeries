@@ -85,7 +85,7 @@ const RegisterForm = ({navigation}) => {
         onEndEditing={(event) => handleInputEnd('full_name', event.nativeEvent.text)}
         errorMessage={registerErrors.full_name}
       />
-      <Button title="Register!" onPress={doRegister} />
+      <Button title="Register!" buttonStyle={{backgroundColor: '#F54029'}} onPress={doRegister} />
     </View>
   );
 };

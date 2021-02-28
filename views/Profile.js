@@ -3,7 +3,7 @@ import {StyleSheet, ActivityIndicator} from 'react-native';
 import {MainContext} from '../contexts/MainContext';
 import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Card, Text, ListItem, Avatar} from 'react-native-elements';
+import {Card, Text, ListItem, Avatar, Button} from 'react-native-elements';
 import {useTag} from '../hooks/ApiHooks';
 import {uploadsURL} from '../utils/Variables';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -13,11 +13,17 @@ const Profile = ({navigation}) => {
   const [avatar, setAvatar] = useState('http://placekitten.com/640');
   const {getFilesByTag} = useTag();
   const logout = async () => {
+    console.log('we get here 1');
     setIsLoggedIn(false);
+    console.log('we get here 2');
     await AsyncStorage.clear();
+    console.log('we get here 3');
+    navigation.navigate('Login');
     if (!isLoggedIn) {
       // this is to make sure isLoggedIn has changed, will be removed later
+      console.log('we get here 4');
       navigation.navigate('Login');
+
     }
   };
 
@@ -44,29 +50,29 @@ const Profile = ({navigation}) => {
         <Card.Image
           source={{uri: avatar}}
           style={styles.image}
-          PlaceholderContent={<ActivityIndicator />}
+          PlaceholderContent={<ActivityIndicator/>}
         />
         <ListItem>
-          <Avatar icon={{name: 'email', color: 'black'}} />
+          <Avatar icon={{name: 'email', color: 'black'}}/>
           <Text>{user.email}</Text>
         </ListItem>
         <ListItem>
-          <Avatar icon={{name: 'user', type: 'font-awesome', color: 'black'}} />
+          <Avatar icon={{name: 'user', type: 'font-awesome', color: 'black'}}/>
           <Text>{user.full_name}</Text>
         </ListItem>
         <ListItem bottomDivider onPress={() => navigation.push('My Files')}>
-          <Avatar icon={{name: 'perm-media', color: 'black'}} />
+          <Avatar icon={{name: 'perm-media', color: 'black'}}/>
           <ListItem.Content>
             <ListItem.Title>My Files</ListItem.Title>
           </ListItem.Content>
-          <ListItem.Chevron />
+          <ListItem.Chevron/>
         </ListItem>
         <ListItem bottomDivider onPress={logout}>
-          <Avatar icon={{name: 'logout', color: 'black'}} />
+          <Avatar icon={{name: 'logout', color: 'black'}}/>
           <ListItem.Content>
             <ListItem.Title>Logout</ListItem.Title>
           </ListItem.Content>
-          <ListItem.Chevron />
+          <ListItem.Chevron/>
         </ListItem>
       </Card>
     </ScrollView>

@@ -14,8 +14,11 @@ import {Icon} from 'react-native-elements';
 import Upload from '../views/Upload';
 import MyFiles from '../views/MyFiles';
 import Modify from '../views/Modify';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {Image} from 'react-native';
 
-const Tab = createBottomTabNavigator();
+// const Tab = createBottomTabNavigator();
+const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
 
 const TabScreen = () => {
@@ -35,13 +38,19 @@ const TabScreen = () => {
               iconName = 'cloud-upload';
               break;
           }
-          return <Icon name={iconName} size={size} color={color} />;
+          return <Icon name={iconName} size={size} color={color}/>;
         },
       })}
+      tabBarOptions={{
+        style: {backgroundColor: '#212121'},
+        activeTintColor: '#F54029',
+        inactiveTintColor: 'white',
+        showIcon: true,
+      }}
     >
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Profile" component={Profile} />
-      <Tab.Screen name="Upload" component={Upload} />
+      <Tab.Screen name="Home" component={Home}/>
+      <Tab.Screen name="Profile" component={Profile}/>
+      <Tab.Screen name="Upload" component={Upload}/>
     </Tab.Navigator>
   );
 };
@@ -57,11 +66,12 @@ const StackScreen = () => {
             component={TabScreen}
             options={({route}) => ({
               headerTitle: getFocusedRouteNameFromRoute(route),
+              headerShown: false,
             })}
           />
-          <Stack.Screen name="Modify" component={Modify} />
-          <Stack.Screen name="My Files" component={MyFiles} />
-          <Stack.Screen name="Single" component={Single} />
+          <Stack.Screen name="Modify" component={Modify}/>
+          <Stack.Screen name="My Files" component={MyFiles}/>
+          <Stack.Screen name="Single" component={Single}/>
         </>
       ) : (
         <>
@@ -72,6 +82,8 @@ const StackScreen = () => {
               headerShown: false,
             })}
           />
+          <Stack.Screen name="Single" component={Single}/>
+          <Tab.Screen name="Home" component={Home}/>
         </>
       )}
     </Stack.Navigator>
@@ -81,7 +93,7 @@ const StackScreen = () => {
 const Navigator = () => {
   return (
     <NavigationContainer>
-      <StackScreen />
+      <StackScreen/>
     </NavigationContainer>
   );
 };
