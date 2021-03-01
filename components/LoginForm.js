@@ -34,14 +34,18 @@ const LoginForm = ({navigation}) => {
         autoCapitalize="none"
         placeholder="username"
         onChangeText={(txt) => handleInputChange('username', txt)}
+        inputContainerStyle={{backgroundColor: '#EEEEEE'}}
+        inputStyle={{paddingLeft: 10}}
       />
       <Input
         autoCapitalize="none"
         placeholder="password"
         onChangeText={(txt) => handleInputChange('password', txt)}
         secureTextEntry={true}
+        inputContainerStyle={{backgroundColor: '#EEEEEE'}}
+        inputStyle={{paddingLeft: 10}}
       />
-      <Button title="Login" buttonStyle={{backgroundColor: '#F54029'}} onPress={doLogin} loading={loading} />
+      <Button title="Login" buttonStyle={{backgroundColor: '#F54029', width: 100, alignSelf: 'center', marginRight: 10}} onPress={doLogin} loading={loading} />
     </View>
   );
 };

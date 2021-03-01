@@ -53,6 +53,8 @@ const RegisterForm = ({navigation}) => {
           checkUserAvailable(event);
           handleInputEnd('username', event.nativeEvent.text)
         }}
+        inputContainerStyle={{backgroundColor: '#EEEEEE'}}
+        inputStyle={{paddingLeft: 10}}
         errorMessage={registerErrors.username}
       />
       <Input
@@ -62,6 +64,8 @@ const RegisterForm = ({navigation}) => {
         onEndEditing={(event) => handleInputEnd('password', event.nativeEvent.text)}
         secureTextEntry={true}
         errorMessage={registerErrors.password}
+        inputContainerStyle={{backgroundColor: '#EEEEEE'}}
+        inputStyle={{paddingLeft: 10}}
       />
       <Input
         autoCapitalize="none"
@@ -70,6 +74,8 @@ const RegisterForm = ({navigation}) => {
         onEndEditing={(event) => handleInputEnd('confirmPassword', event.nativeEvent.text)}
         secureTextEntry={true}
         errorMessage={registerErrors.confirmPassword}
+        inputContainerStyle={{backgroundColor: '#EEEEEE'}}
+        inputStyle={{paddingLeft: 10}}
       />
       <Input
         autoCapitalize="none"
@@ -77,6 +83,8 @@ const RegisterForm = ({navigation}) => {
         onChangeText={(txt) => handleInputChange('email', txt)}
         onEndEditing={(event) => handleInputEnd('email', event.nativeEvent.text)}
         errorMessage={registerErrors.email}
+        inputContainerStyle={{backgroundColor: '#EEEEEE'}}
+        inputStyle={{paddingLeft: 10}}
       />
       <Input
         autoCapitalize="none"
@@ -84,8 +92,10 @@ const RegisterForm = ({navigation}) => {
         onChangeText={(txt) => handleInputChange('full_name', txt)}
         onEndEditing={(event) => handleInputEnd('full_name', event.nativeEvent.text)}
         errorMessage={registerErrors.full_name}
+        inputContainerStyle={{backgroundColor: '#EEEEEE'}}
+        inputStyle={{paddingLeft: 10}}
       />
-      <Button title="Register!" buttonStyle={{backgroundColor: '#F54029'}} onPress={doRegister} />
+      <Button title="Register!" buttonStyle={{backgroundColor: '#F54029', width: 100, alignSelf: 'center', marginRight: 10}} onPress={doRegister} />
     </View>
   );
 };
