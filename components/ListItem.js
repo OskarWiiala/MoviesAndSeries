@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
 import {uploadsURL} from '../utils/Variables';
 import {Avatar, ListItem as RNEListItem} from 'react-native-elements';
-import {Button} from 'react-native';
+import {Button, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useMedia} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
@@ -33,7 +33,7 @@ const ListItem = ({navigation, singleMedia, isMyFile}) => {
           },
         },
       ],
-      {cancelable: false}
+      {cancelable: false},
     );
   };
 
@@ -48,24 +48,32 @@ const ListItem = ({navigation, singleMedia, isMyFile}) => {
         size="large"
         square
         source={{uri: uploadsURL + singleMedia.thumbnails.w160}}
-      ></Avatar>
+      />
       <RNEListItem.Content>
         <RNEListItem.Title h4>{singleMedia.title}</RNEListItem.Title>
         <RNEListItem.Subtitle>{singleMedia.description}</RNEListItem.Subtitle>
-        {isMyFile && (
-          <>
-            <Button
-              title="Modify"
-              onPress={() => navigation.push('Modify', {file: singleMedia})}
-            ></Button>
-            <Button title="Delete" color="red" onPress={doDelete}></Button>
-          </>
-        )}
+        <RNEListItem style={styles.ownerButtons}>
+          {isMyFile && (
+            <>
+              <Button
+                title="Modify"
+                onPress={() => navigation.push('Modify', {file: singleMedia})}
+              />
+              <Button title="Delete" color="red" onPress={doDelete}/>
+            </>
+          )}
+        </RNEListItem>
       </RNEListItem.Content>
-      <RNEListItem.Chevron />
+      <RNEListItem.Chevron/>
     </RNEListItem>
   );
 };
+
+const styles = StyleSheet.create({
+  ownerButtons: {
+    alignSelf: 'flex-end',
+  },
+});
 
 ListItem.propTypes = {
   singleMedia: PropTypes.object,

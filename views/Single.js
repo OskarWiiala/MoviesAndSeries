@@ -49,7 +49,7 @@ const Single = ({route}) => {
   const lock = async () => {
     try {
       await ScreenOrientation.lockAsync(
-        ScreenOrientation.OrientationLock.PORTRAIT_UP
+        ScreenOrientation.OrientationLock.PORTRAIT_UP,
       );
     } catch (error) {
       console.error('lock', error.message);
@@ -90,14 +90,14 @@ const Single = ({route}) => {
   return (
     <ScrollView>
       <Card>
-        <Card.Title h4>{file.title}</Card.Title>
-        <Card.Title>{moment(file.time_added).format('LLL')}</Card.Title>
-        <Card.Divider />
+        <Card.Title style={styles.singleTitle}>{file.title}</Card.Title>
+
+        <Card.Divider/>
         {file.media_type === 'image' ? (
           <Card.Image
             source={{uri: uploadsURL + file.filename}}
             style={styles.image}
-            PlaceholderContent={<ActivityIndicator />}
+            PlaceholderContent={<ActivityIndicator/>}
           />
         ) : (
           <Video
@@ -112,12 +112,15 @@ const Single = ({route}) => {
             posterSource={{uri: uploadsURL + file.screenshot}}
           />
         )}
-        <Card.Divider />
-        <Text style={styles.description}>{file.description}</Text>
+        <Card.Divider/>
+        <Card.Title style={styles.timeAdded}>{moment(file.time_added).
+          format('LLL')}</Card.Title>
+        <Text>Rating 1 - 5 stars</Text>
         <ListItem>
-          <Avatar source={{uri: avatar}} />
-          <Text>{owner.username}</Text>
+          <Text style={styles.owner}>By: {owner.username}</Text>
+          {/*<Avatar source={{uri: avatar}}/>*/}
         </ListItem>
+        <Text style={styles.description}>{file.description}</Text>
       </Card>
     </ScrollView>
   );
@@ -131,6 +134,21 @@ const styles = StyleSheet.create({
   },
   description: {
     marginBottom: 10,
+  },
+  singleTitle: {
+    backgroundColor: '#F54029',
+    color: 'white',
+    // fontWeight: 'normal',
+    fontSize: 18,
+    marginLeft: -16,
+    marginRight: -16,
+  },
+  timeAdded: {
+    fontSize: 12,
+    alignSelf: 'flex-end'
+  },
+  owner: {
+    textDecorationLine: 'underline',
   },
 });
 
