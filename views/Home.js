@@ -3,11 +3,10 @@ import {SafeAreaView, StatusBar, StyleSheet, View} from 'react-native';
 import List from '../components/List';
 import GlobalStyles from '../GlobalStyles';
 import PropTypes from 'prop-types';
-import {SearchBar} from 'react-native-elements';
+import {Card, SearchBar} from 'react-native-elements';
 import useSearchForm from '../hooks/SearchHooks';
 
 const Home = ({navigation}) => {
-
   const {inputs, handleInputChange} = useSearchForm();
 
   const doSearch = async () => {
@@ -24,7 +23,9 @@ const Home = ({navigation}) => {
                  placeholder="Type Here..."
                  onChangeText={(txt) => handleInputChange('text', txt)}
       />
-      <List navigation={navigation} myFilesOnly={false}/>
+
+      <List style={styles.Title} navigation={navigation} myFilesOnly={false}/>
+
       <StatusBar style="auto"/>
     </View>
   );
@@ -34,6 +35,9 @@ const styles = StyleSheet.create({
   searchBar: {
     // placeholder: 'search'
   },
+  Title: {
+
+  }
 });
 
 Home.propTypes = {

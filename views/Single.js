@@ -67,7 +67,6 @@ const Single = ({route}) => {
       console.error('fullscreen', error.message);
     }
   };
-
   useEffect(() => {
     unlock();
     fetchAvatar();
