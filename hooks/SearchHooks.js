@@ -1,9 +1,8 @@
 import {useState} from 'react';
 
-const useSearchForm = (callback) => {
+const useSearchForm = () => {
   const [inputs, setInputs] = useState({
     title: '',
-    // description: '',
   });
 
   const handleInputChange = (name, text) => {
