@@ -6,45 +6,55 @@ import {appIdentifier, baseUrl} from '../utils/Variables';
 
 // general function for fetching (options default value is empty object)
 const doFetch = async (url, options = {}) => {
+  // console.log('here1');
   const response = await fetch(url, options);
+  // console.log('here2');
   const json = await response.json();
+  // console.log('here3');
   if (json.error) {
+    // console.log('here4');
     // if API response contains error message (use Postman to get further details)
-    throw new Error(json.message + ': ' + json.error);
+    throw new Error('doFetch1' + json.message + ': ' + json.error);
   } else if (!response.ok) {
+    // console.log('here5');
     // if API response does not contain error message, but there is some other error
     throw new Error('doFetch failed');
   } else {
-    // if all goes well
+    // console.log('here6');
     return json;
   }
 };
 
-const useLoadMedia = (myFilesOnly, userId) => {
+const useLoadMedia = (myFilesOnly, userId, searchOnly, inputs) => {
   const [mediaArray, setMediaArray] = useState([]);
   const {update} = useContext(MainContext);
 
   const loadMedia = async () => {
     try {
       const listJson = await doFetch(baseUrl + 'tags/' + appIdentifier);
-      let media = await Promise.all(
-        listJson.map(async (item) => {
-          const fileJson = await doFetch(baseUrl + 'media/' + item.file_id);
-          return fileJson;
-        })
-      );
-      if (myFilesOnly) {
-        media = media.filter((item) => item.user_id === userId);
-      }
+        let media = await Promise.all(
+          listJson.map(async (item) => {
+            const fileJson = await doFetch(baseUrl + 'media/' + item.file_id);
+            return fileJson;
+          }),
+        );
+        if (myFilesOnly) {
+          media = media.filter((item) => item.user_id === userId);
+        }
+        if(searchOnly) {
+          media = media.filter((item) => item.title.includes(inputs.title.toString()));
+        }
+
       setMediaArray(media);
     } catch (error) {
       console.error('loadMedia error', error.message);
     }
   };
+
   useEffect(() => {
     loadMedia();
   }, [update]);
-  return mediaArray;
+  return {mediaArray, loadMedia};
 };
 
 const useLogin = () => {
@@ -55,6 +65,8 @@ const useLogin = () => {
       body: JSON.stringify(userCredentials),
     };
     try {
+      console.log('useLogin postLogin options:', options);
+      // console.log('user credentials', userCredentials);
       const userData = await doFetch(baseUrl + 'login', options);
       return userData;
     } catch (error) {
@@ -198,4 +210,6 @@ const useMedia = () => {
   return {upload, updateFile, deleteFile};
 };
 
-export {useLoadMedia, useLogin, useUser, useTag, useMedia};
+
+
+export {useLoadMedia, useLogin, useUser, useTag, useMedia,};

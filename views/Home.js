@@ -1,31 +1,36 @@
-import React from 'react';
-import {SafeAreaView, StatusBar, StyleSheet, View} from 'react-native';
+import React, {useState} from 'react';
+import {StatusBar, StyleSheet, View, Text} from 'react-native';
 import List from '../components/List';
-import GlobalStyles from '../GlobalStyles';
 import PropTypes from 'prop-types';
-import {Card, SearchBar} from 'react-native-elements';
+import {Input, Button} from 'react-native-elements';
 import useSearchForm from '../hooks/SearchHooks';
 
+
+
 const Home = ({navigation}) => {
+  const [loading, setLoading] = useState(false);
   const {inputs, handleInputChange} = useSearchForm();
-
-  const doSearch = async () => {
-    try {
-
-    } catch {
-
-    }
-  };
 
   return (
     <View>
-      <SearchBar style={styles.searchBar} placeholderTextColor='white'
-                 placeholder="Type Here..."
-                 onChangeText={(txt) => handleInputChange('text', txt)}
-      />
-
-      <List style={styles.Title} navigation={navigation} myFilesOnly={false}/>
-
+      <View style={{flexDirection: 'row', backgroundColor: '#212121',}}>
+        <View style={{flex: 1}}>
+        <Input style={{alignSelf: 'flex-start',}}
+          autoCapitalize="none"
+          placeholder="Search titles..."
+          onChangeText={(txt) => handleInputChange('title', txt)}
+          inputContainerStyle={{backgroundColor: 'white', width: '150%', alignSelf:'flex-start', marginTop: 10,}}
+          // placeholderTextColor={''}
+          inputStyle={{paddingLeft: 10}}
+        />
+        </View>
+      <View style={{flex: 1}}>
+        <Button title="Go" buttonStyle={{backgroundColor: '#F54029', width: 100, marginRight: 10, marginTop: 10, alignSelf:'flex-end'}} onPress={() => navigation.push('SearchFiles', {
+          paramKey: inputs,
+        })}/>
+      </View>
+      </View>
+      <List navigation={navigation} myFilesOnly={false} searchOnly={false}/>
       <StatusBar style="auto"/>
     </View>
   );

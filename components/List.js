@@ -1,18 +1,19 @@
 import React, {useContext} from 'react';
-import {FlatList} from 'react-native';
+import {FlatList, ScrollView} from 'react-native';
 import {useLoadMedia} from '../hooks/ApiHooks';
 import ListItem from './ListItem';
 import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
-import {MainProvider} from '../contexts/MainContext'
+import {MainProvider} from '../contexts/MainContext';
 
-const List = ({navigation, myFilesOnly}) => {
+const List = ({navigation, myFilesOnly, searchOnly, inputs}) => {
   const {isLoggedIn, user} = useContext(MainContext);
-  const mediaArray = useLoadMedia(myFilesOnly, user.user_id);
+  const {mediaArray} = useLoadMedia(myFilesOnly, user.user_id, searchOnly, inputs);
 
-  if(isLoggedIn) {
+  if (isLoggedIn) {
     return (
       <FlatList
+        style={{width: '100%', height: '80%'}}
         data={mediaArray.reverse()}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({item}) => (

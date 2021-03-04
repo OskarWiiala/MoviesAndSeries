@@ -1,12 +1,12 @@
 import {useState} from 'react';
 
-const useSearchForm = (callback) => {
+const useSearchForm = () => {
   const [inputs, setInputs] = useState({
-    text: '',
+    title: '',
   });
 
   const handleInputChange = (name, text) => {
-    // console.log(name, text);
+    console.log(name, text);
     setInputs((inputs) => {
       return {
         ...inputs,
