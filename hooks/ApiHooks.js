@@ -25,10 +25,11 @@ const doFetch = async (url, options = {}) => {
   }
 };
 
-const useLoadMedia = (myFilesOnly, userId, searchOnly, inputs, myFavouritesOnly,) => {
+const useLoadMedia = (
+  myFilesOnly, userId, searchOnly, inputs, myFavouritesOnly) => {
   const [mediaArray, setMediaArray] = useState([]);
   const {update} = useContext(MainContext);
-  const {checkFavourite} = useFavourite();
+  const {getFavourites} = useFavourite();
 
   const loadMedia = async () => {
     try {
@@ -46,8 +47,11 @@ const useLoadMedia = (myFilesOnly, userId, searchOnly, inputs, myFavouritesOnly,
         media = media.filter(
           (item) => item.title.includes(inputs.title.toString()));
       }
-      if(myFavouritesOnly) {
-
+      if (myFavouritesOnly) {
+        const userToken = await AsyncStorage.getItem('userToken');
+        let myData = await getFavourites(userToken, userId);
+        media = media.filter((item) => myData.includes(item.file_id));
+        console.log('Apihooks.js useLoadMedia LoadMedia myData:', myData);
       }
 
       setMediaArray(media);
@@ -223,13 +227,36 @@ const useFavourite = () => {
       const checkIsFavouriteArray = [];
       result.map((item) => {
         const singleFavouriteUserId = item.user_id;
-        checkIsFavouriteArray.push(singleFavouriteUserId)
+        checkIsFavouriteArray.push(singleFavouriteUserId);
       });
       return checkIsFavouriteArray.includes(userId);
 
     } catch (error) {
       throw new Error(
         'Apihooks.js useFavourite checkFavourite error: ' + error.message);
+    }
+  };
+
+  const getFavourites = async (token, userId) => {
+    const options = {
+      method: 'GET',
+      headers: {
+        'x-access-token': token,
+        'Content-type': 'application/json',
+      },
+    };
+    try {
+      const result = await doFetch(baseUrl + 'favourites', options);
+      const userFavouritesArray = [];
+      result.map((item) => {
+        if (item.user_id === userId) {
+          userFavouritesArray.push(item.file_id);
+        }
+      });
+      return userFavouritesArray;
+    } catch (error) {
+      throw new Error(
+        'Apihooks.js useFavourite getFavourites error: ' + error.message);
     }
   };
 
@@ -273,7 +300,7 @@ const useFavourite = () => {
         'Apihooks.js useFavourite postFavourite error: ' + error.message);
     }
   };
-  return {postFavourite, deleteFavourite, checkFavourite};
+  return {postFavourite, deleteFavourite, checkFavourite, getFavourites};
 };
 
 export {useLoadMedia, useLogin, useUser, useTag, useMedia, useFavourite};
