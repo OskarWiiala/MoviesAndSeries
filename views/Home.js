@@ -5,8 +5,6 @@ import PropTypes from 'prop-types';
 import {Input, Button} from 'react-native-elements';
 import useSearchForm from '../hooks/SearchHooks';
 
-
-
 const Home = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const {inputs, handleInputChange} = useSearchForm();
@@ -40,6 +38,9 @@ const styles = StyleSheet.create({
   searchBar: {
     // placeholder: 'search'
   },
+  Title: {
+
+  }
 });
 
 Home.propTypes = {

@@ -67,6 +67,13 @@ const Profile = ({navigation}) => {
           </ListItem.Content>
           <ListItem.Chevron/>
         </ListItem>
+        <ListItem bottomDivider onPress={() => navigation.push('MyFavourites')}>
+          <Avatar icon={{name: 'heart', type: 'font-awesome', color: 'black'}}/>
+          <ListItem.Content>
+            <ListItem.Title>My Favourites</ListItem.Title>
+          </ListItem.Content>
+          <ListItem.Chevron/>
+        </ListItem>
         <ListItem bottomDivider onPress={logout}>
           <Avatar icon={{name: 'logout', color: 'black'}}/>
           <ListItem.Content>

@@ -1,10 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, ActivityIndicator} from 'react-native';
+import {StyleSheet, ActivityIndicator, View} from 'react-native';
 import PropTypes from 'prop-types';
 import {uploadsURL} from '../utils/Variables';
-import {Avatar, Card, ListItem, Text} from 'react-native-elements';
+import {
+  Avatar,
+  Button,
+  Card,
+  ListItem,
+  Text,
+  Icon,
+} from 'react-native-elements';
 import moment from 'moment';
-import {useTag, useUser} from '../hooks/ApiHooks';
+import {useTag, useUser, useFavourite} from '../hooks/ApiHooks';
 import {Video} from 'expo-av';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ScreenOrientation from 'expo-screen-orientation';
@@ -15,7 +22,8 @@ const Single = ({route}) => {
   const [avatar, setAvatar] = useState('http://placekitten.com/100');
   const [owner, setOwner] = useState({username: 'somebody'});
   const {getFilesByTag} = useTag();
-  const {getUser} = useUser();
+  const {getUser, checkToken} = useUser();
+  const {checkFavourite, postFavourite, deleteFavourite} = useFavourite();
   const [videoRef, setVideoRef] = useState(null);
 
   const fetchAvatar = async () => {
@@ -67,7 +75,6 @@ const Single = ({route}) => {
       console.error('fullscreen', error.message);
     }
   };
-
   useEffect(() => {
     unlock();
     fetchAvatar();
@@ -86,6 +93,34 @@ const Single = ({route}) => {
       lock();
     };
   }, [videoRef]);
+
+  const doCheckFavourite = async () => {
+    const userToken = await AsyncStorage.getItem('userToken');
+    const currentUserData = await checkToken(userToken);
+    const userId = currentUserData.user_id;
+    const checkIsAlreadyFavourited = await checkFavourite(file.file_id, userId);
+    await doFavourite(checkIsAlreadyFavourited);
+  };
+
+  const doFavourite = async (checkIsAlreadyFavourited) => {
+    if (checkIsAlreadyFavourited === false) {
+      try {
+        const userToken = await AsyncStorage.getItem('userToken');
+        const response = await postFavourite(file.file_id, userToken);
+        alert(response.message);
+      } catch (error) {
+        console.error('Singles.js doFavourite error', error.message);
+      }
+    } else {
+      try {
+        const userToken = await AsyncStorage.getItem('userToken');
+        const response = await deleteFavourite(file.file_id, userToken);
+        alert(response.message);
+      } catch (error) {
+        console.error('Singles.js doFavourite error', error.message);
+      }
+    }
+  };
 
   return (
     <ScrollView>
@@ -121,6 +156,42 @@ const Single = ({route}) => {
           {/*<Avatar source={{uri: avatar}}/>*/}
         </ListItem>
         <Text style={styles.description}>{file.description}</Text>
+        <View style={{flexDirection: 'row'}}>
+          <View style={{flex: 1}}>
+            <Button
+              buttonStyle={{
+                backgroundColor: 'white',
+                width: 75,
+                alignSelf: 'flex-start',
+              }}
+              icon={
+                <Icon
+                  name="heart"
+                  type="font-awesome"
+                  size={50}
+                  color="red"
+                />
+              }
+              onPress={() => doCheckFavourite()}/>
+          </View>
+          <View style={{flex: 1}}>
+            <Button
+              buttonStyle={{
+                backgroundColor: 'white',
+                width: 75,
+                alignSelf: 'flex-end',
+              }}
+              icon={
+                <Icon
+                  name="comment-o"
+                  type="font-awesome"
+                  size={50}
+                  color="grey"
+                />
+              }
+              onPress={() => alert('pressed comment')}/>
+          </View>
+        </View>
       </Card>
     </ScrollView>
   );
@@ -145,7 +216,7 @@ const styles = StyleSheet.create({
   },
   timeAdded: {
     fontSize: 12,
-    alignSelf: 'flex-end'
+    alignSelf: 'flex-end',
   },
   owner: {
     textDecorationLine: 'underline',

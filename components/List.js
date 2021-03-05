@@ -6,9 +6,9 @@ import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
 import {MainProvider} from '../contexts/MainContext';
 
-const List = ({navigation, myFilesOnly, searchOnly, inputs}) => {
+const List = ({navigation, myFilesOnly, searchOnly, inputs, myFavouritesOnly,}) => {
   const {isLoggedIn, user} = useContext(MainContext);
-  const {mediaArray} = useLoadMedia(myFilesOnly, user.user_id, searchOnly, inputs);
+  const {mediaArray} = useLoadMedia(myFilesOnly, user.user_id, searchOnly, inputs, myFavouritesOnly,);
 
   if (isLoggedIn) {
     return (

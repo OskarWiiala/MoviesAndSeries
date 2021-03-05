@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {useContext, useEffect, useState} from 'react';
 import {MainContext} from '../contexts/MainContext';
@@ -24,25 +25,30 @@ const doFetch = async (url, options = {}) => {
   }
 };
 
-const useLoadMedia = (myFilesOnly, userId, searchOnly, inputs) => {
+const useLoadMedia = (myFilesOnly, userId, searchOnly, inputs, myFavouritesOnly,) => {
   const [mediaArray, setMediaArray] = useState([]);
   const {update} = useContext(MainContext);
+  const {checkFavourite} = useFavourite();
 
   const loadMedia = async () => {
     try {
       const listJson = await doFetch(baseUrl + 'tags/' + appIdentifier);
-        let media = await Promise.all(
-          listJson.map(async (item) => {
-            const fileJson = await doFetch(baseUrl + 'media/' + item.file_id);
-            return fileJson;
-          }),
-        );
-        if (myFilesOnly) {
-          media = media.filter((item) => item.user_id === userId);
-        }
-        if(searchOnly) {
-          media = media.filter((item) => item.title.includes(inputs.title.toString()));
-        }
+      let media = await Promise.all(
+        listJson.map(async (item) => {
+          const fileJson = await doFetch(baseUrl + 'media/' + item.file_id);
+          return fileJson;
+        }),
+      );
+      if (myFilesOnly) {
+        media = media.filter((item) => item.user_id === userId);
+      }
+      if (searchOnly) {
+        media = media.filter(
+          (item) => item.title.includes(inputs.title.toString()));
+      }
+      if(myFavouritesOnly) {
+
+      }
 
       setMediaArray(media);
     } catch (error) {
@@ -209,6 +215,65 @@ const useMedia = () => {
   return {upload, updateFile, deleteFile};
 };
 
+const useFavourite = () => {
 
+  const checkFavourite = async (fileId, userId) => {
+    try {
+      const result = await doFetch(baseUrl + 'favourites/file/' + fileId);
+      const checkIsFavouriteArray = [];
+      result.map((item) => {
+        const singleFavouriteUserId = item.user_id;
+        checkIsFavouriteArray.push(singleFavouriteUserId)
+      });
+      return checkIsFavouriteArray.includes(userId);
 
-export {useLoadMedia, useLogin, useUser, useTag, useMedia,};
+    } catch (error) {
+      throw new Error(
+        'Apihooks.js useFavourite checkFavourite error: ' + error.message);
+    }
+  };
+
+  const postFavourite = async (fileId, token) => {
+    const options = {
+      method: 'POST',
+      headers: {
+        'x-access-token': token,
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        file_id: fileId,
+      }),
+    };
+    try {
+      const result = await doFetch(baseUrl + 'favourites', options);
+      return result;
+    } catch (error) {
+      throw new Error(
+        'Apihooks.js useFavourite postFavourite error: ' + error.message);
+    }
+  };
+
+  const deleteFavourite = async (fileId, token) => {
+    const options = {
+      method: 'DELETE',
+      headers: {
+        'x-access-token': token,
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        file_id: fileId,
+      }),
+    };
+    try {
+      const result = await doFetch(baseUrl + 'favourites/file/' + fileId,
+        options);
+      return result;
+    } catch (error) {
+      throw new Error(
+        'Apihooks.js useFavourite postFavourite error: ' + error.message);
+    }
+  };
+  return {postFavourite, deleteFavourite, checkFavourite};
+};
+
+export {useLoadMedia, useLogin, useUser, useTag, useMedia, useFavourite};
