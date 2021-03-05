@@ -6,21 +6,13 @@ import {appIdentifier, baseUrl} from '../utils/Variables';
 
 // general function for fetching (options default value is empty object)
 const doFetch = async (url, options = {}) => {
-  // console.log('here1');
   const response = await fetch(url, options);
-  // console.log('here2');
   const json = await response.json();
-  // console.log('here3');
   if (json.error) {
-    // console.log('here4');
-    // if API response contains error message (use Postman to get further details)
     throw new Error('doFetch1' + json.message + ': ' + json.error);
   } else if (!response.ok) {
-    // console.log('here5');
-    // if API response does not contain error message, but there is some other error
     throw new Error('doFetch failed');
   } else {
-    // console.log('here6');
     return json;
   }
 };
@@ -49,9 +41,8 @@ const useLoadMedia = (
       }
       if (myFavouritesOnly) {
         const userToken = await AsyncStorage.getItem('userToken');
-        let myData = await getFavourites(userToken, userId);
-        media = media.filter((item) => myData.includes(item.file_id));
-        console.log('Apihooks.js useLoadMedia LoadMedia myData:', myData);
+        let userFavouritesArray = await getFavourites(userToken, userId);
+        media = media.filter((item) => userFavouritesArray.includes(item.file_id));
       }
 
       setMediaArray(media);
