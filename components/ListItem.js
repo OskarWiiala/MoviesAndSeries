@@ -70,7 +70,7 @@ const ListItem = ({navigation, singleMedia, isMyFile}) => {
           <Text>Reviewed by: </Text>
           {owner.username}
         </RNEListItem.Subtitle>
-        <RNEListItem.Subtitle style={styles.desc}>
+        <RNEListItem.Subtitle numberOfLines={3} style={styles.desc}>
           {singleMedia.description}
         </RNEListItem.Subtitle>
         <RNEListItem style={styles.ownerButtons}>
@@ -91,20 +91,16 @@ const ListItem = ({navigation, singleMedia, isMyFile}) => {
           )}
         </RNEListItem>
         <RNEListItem.Subtitle style={styles.rating}>
-        Rating 1 - 5 stars
+          Rating 1 - 5 stars
         </RNEListItem.Subtitle>
         <RNEListItem style={styles.reviewButton}>
-        <Button
-          color="#F54029"
-          shadowColor="#000"
-          shadowOpacity="0.58"
-          shadowRadius="16.00"
-          elevation="12"
-          title="See review"
-          onPress={() => {
-            navigation.navigate('Single', {file: singleMedia});
-          }}
-        ></Button>
+          <Button
+            color="#F54029"
+            title="See review"
+            onPress={() => {
+              navigation.navigate('Single', {file: singleMedia});
+            }}
+          ></Button>
         </RNEListItem>
       </RNEListItem.Content>
       <RNEListItem.Chevron />
@@ -121,32 +117,30 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
 
-
     marginLeft: 5,
     marginRight: 5,
     borderWidth: 1,
     borderColor: 'black',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
 
+    elevation: 0,
   },
   reviewButton: {
     paddingBottom: 20,
+    elevation: 12
   },
   rating: {
     alignSelf: 'flex-start',
     fontSize: 17,
     color: 'black',
     marginLeft: 20,
-  },
-  Item: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowOpacity: 0.39,
-    shadowRadius: 8.3,
-
-    elevation: 13,
+    elevation: 12,
   },
   Image: {
     width: 300,
@@ -164,6 +158,8 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: 'black',
     paddingTop: 10,
+    marginLeft: 20,
+    marginRight: 20,
   },
   ReviewUser: {
     fontSize: 17,
