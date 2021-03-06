@@ -3,6 +3,7 @@ import axios from 'axios';
 import {useContext, useEffect, useState} from 'react';
 import {MainContext} from '../contexts/MainContext';
 import {appIdentifier, baseUrl} from '../utils/Variables';
+import { sortBy } from '../views/Home';
 
 // general function for fetching (options default value is empty object)
 const doFetch = async (url, options = {}) => {
