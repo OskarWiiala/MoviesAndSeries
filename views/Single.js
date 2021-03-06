@@ -16,8 +16,9 @@ import {Video} from 'expo-av';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import {ScrollView} from 'react-native-gesture-handler';
+import CommentList from '../components/CommentList';
 
-const Single = ({route}) => {
+const Single = ({navigation, route}) => {
   const {file} = route.params;
   const [avatar, setAvatar] = useState('http://placekitten.com/100');
   const [owner, setOwner] = useState({username: 'somebody'});
@@ -189,10 +190,13 @@ const Single = ({route}) => {
                   color="grey"
                 />
               }
-              onPress={() => alert('pressed comment')}/>
+              onPress={() => navigation.push('Comment', {navigation, file})}/>
           </View>
         </View>
       </Card>
+
+      <CommentList navigation={navigation} route={file}/>
+
     </ScrollView>
   );
 };

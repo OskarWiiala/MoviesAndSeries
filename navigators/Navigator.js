@@ -16,6 +16,7 @@ import MyFiles from '../views/MyFiles';
 import SearchFiles from '../views/SearchFiles';
 import MyFavourites from '../views/MyFavourites';
 import Modify from '../views/Modify';
+import Comment from '../views/Comment';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {Image} from 'react-native';
 
@@ -75,6 +76,7 @@ const StackScreen = () => {
           <Stack.Screen name="My Files" component={MyFiles}/>
           <Stack.Screen name="SearchFiles" component={SearchFiles}/>
           <Stack.Screen name="MyFavourites" component={MyFavourites}/>
+          <Stack.Screen name="Comment" component={Comment}/>
           <Stack.Screen name="Single" component={Single}/>
         </>
       ) : (

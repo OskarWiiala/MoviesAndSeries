@@ -42,7 +42,8 @@ const useLoadMedia = (
       if (myFavouritesOnly) {
         const userToken = await AsyncStorage.getItem('userToken');
         let userFavouritesArray = await getFavourites(userToken, userId);
-        media = media.filter((item) => userFavouritesArray.includes(item.file_id));
+        media = media.filter(
+          (item) => userFavouritesArray.includes(item.file_id));
       }
 
       setMediaArray(media);
@@ -55,6 +56,27 @@ const useLoadMedia = (
     loadMedia();
   }, [update]);
   return {mediaArray, loadMedia};
+};
+
+const useLoadComments = (fileId) => {
+  const [mediaArray, setMediaArray] = useState([]);
+  const {update} = useContext(MainContext);
+  const {getCommentsByFileId} = useComment();
+
+  const loadFileComments = async () => {
+    try {
+      const commentsListByFileId = await getCommentsByFileId(fileId);
+      setMediaArray(commentsListByFileId);
+
+    } catch (error) {
+      console.error('ApiHooks.js UseLoadComments loadFileComments error:', error.message);
+    }
+
+  };
+  useEffect(() => {
+    loadFileComments();
+  }, [update]);
+  return {mediaArray, loadFileComments};
 };
 
 const useLogin = () => {
@@ -294,4 +316,64 @@ const useFavourite = () => {
   return {postFavourite, deleteFavourite, checkFavourite, getFavourites};
 };
 
-export {useLoadMedia, useLogin, useUser, useTag, useMedia, useFavourite};
+const useComment = () => {
+
+  const postComment = async (fileId, inputs, token) => {
+    const options = {
+      method: 'POST',
+      headers: {
+        'x-access-token': token,
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({file_id: fileId, comment: inputs.comment}),
+    };
+    try {
+      console.log('Apihooks.js useComment postComment data:', JSON.stringify({file_id: fileId, comment: inputs.comment}),);
+      const result = await doFetch(baseUrl + 'comments', options);
+      return result;
+    } catch (error) {
+      throw new Error(
+        'Apihooks.js useComment postComment error: ' + error.message);
+    }
+  };
+
+  const deleteComment = async (commentId, token) => {
+    const options = {
+      method: 'DELETE',
+      headers: {
+        'x-access-token': token,
+        'Content-type': 'application/json',
+      },
+    };
+    try {
+      const result = await doFetch(baseUrl + 'comments/' + commentId, options);
+      return result;
+    } catch (error) {
+      throw new Error(
+        'Apihooks.js useComment deleteComment error: ' + error.message);
+    }
+  };
+
+  const getCommentsByFileId = async (fileId) => {
+    try {
+      const result = await doFetch(baseUrl + 'comments/file/' + fileId);
+      return result;
+    } catch (error) {
+      throw new Error(
+        'Apihooks.js useComment getCommentsByFileId error: ' + error.message);
+    }
+  };
+
+  return {postComment, deleteComment, getCommentsByFileId};
+};
+
+export {
+  useLoadMedia,
+  useLogin,
+  useUser,
+  useTag,
+  useMedia,
+  useFavourite,
+  useComment,
+  useLoadComments,
+};

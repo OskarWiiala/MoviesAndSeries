@@ -79,7 +79,7 @@ const ListItem = ({navigation, singleMedia, isMyFile}) => {
               <Button
                 paddingRight="100"
                 title="Modify"
-                onPress={() => navigation.push('Modify', {file: singleMedia})}
+                onPress={() => navigation.push('Modify', {navigation, file: singleMedia})}
               />
               <Button
                 // style={styles.buttonD}
