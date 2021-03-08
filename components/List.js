@@ -27,7 +27,7 @@ const List = ({navigation, myFilesOnly, searchOnly, inputs, myFavouritesOnly,}) 
 
   useEffect(() => {
     getSelected();
-  });
+  }, []);
 
 
   if (isLoggedIn && selected === "newest") {
@@ -69,6 +69,7 @@ const List = ({navigation, myFilesOnly, searchOnly, inputs, myFavouritesOnly,}) 
           <ListItem
             navigation={navigation}
             singleMedia={item}
+            isMyFile={item.user_id === user.user_id}
           />
         )}
       />
@@ -82,6 +83,7 @@ const List = ({navigation, myFilesOnly, searchOnly, inputs, myFavouritesOnly,}) 
           <ListItem
             navigation={navigation}
             singleMedia={item}
+            isMyFile={item.user_id === user.user_id}
           />
         )}
       />
@@ -95,6 +97,7 @@ const List = ({navigation, myFilesOnly, searchOnly, inputs, myFavouritesOnly,}) 
           <ListItem
             navigation={navigation}
             singleMedia={item}
+            isMyFile={item.user_id === user.user_id}
           />
         )}
       />

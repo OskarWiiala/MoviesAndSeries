@@ -3,7 +3,7 @@ import axios from 'axios';
 import {useContext, useEffect, useState} from 'react';
 import {MainContext} from '../contexts/MainContext';
 import {appIdentifier, baseUrl} from '../utils/Variables';
-import { sortBy } from '../views/Home';
+import {sortBy} from '../views/Home';
 
 // general function for fetching (options default value is empty object)
 const doFetch = async (url, options = {}) => {
@@ -70,7 +70,8 @@ const useLoadComments = (fileId) => {
       setMediaArray(commentsListByFileId);
 
     } catch (error) {
-      console.error('ApiHooks.js UseLoadComments loadFileComments error:', error.message);
+      console.error('ApiHooks.js UseLoadComments loadFileComments error:',
+        error.message);
     }
 
   };
@@ -184,7 +185,8 @@ const useTag = () => {
 };
 
 const useMedia = () => {
-  const upload = async (fd, token) => {
+  const {postRating} = useRating();
+  const upload = async (fd, rating, token) => {
     const options = {
       method: 'POST',
       headers: {'x-access-token': token},
@@ -193,7 +195,13 @@ const useMedia = () => {
     };
     console.log('apihooks upload', options);
     try {
+
       const response = await axios(options);
+      console.log('axios good');
+      console.log('ApiHooks.js useMedia upload values: ' + 'fd.file_id: ' +
+        response.file_id + ' rating: ' + rating + ' response: ' + response +
+        ' response.data.file_id: ' + response.data.file_id);
+      const addRating = await postRating(response.data.file_id, rating, token);
       return response.data;
     } catch (e) {
       throw new Error(e.message);
@@ -329,7 +337,8 @@ const useComment = () => {
       body: JSON.stringify({file_id: fileId, comment: inputs.comment}),
     };
     try {
-      console.log('Apihooks.js useComment postComment data:', JSON.stringify({file_id: fileId, comment: inputs.comment}),);
+      console.log('Apihooks.js useComment postComment data:',
+        JSON.stringify({file_id: fileId, comment: inputs.comment}));
       const result = await doFetch(baseUrl + 'comments', options);
       return result;
     } catch (error) {
@@ -368,6 +377,51 @@ const useComment = () => {
   return {postComment, deleteComment, getCommentsByFileId};
 };
 
+const useRating = () => {
+  const postRating = async (fileId, rating, token) => {
+    const options = {
+      method: 'POST',
+      headers: {
+        'x-access-token': token,
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({file_id: fileId, rating: rating}),
+    };
+    try {
+      console.log(
+        'Apihooks.js useRating postRating values: ' + 'fileId: ' + fileId +
+        ' rating: ' + rating + ' token: ' + token);
+      console.log('Apihooks.js useRating postRating data:',
+        JSON.stringify({file_id: fileId, rating: rating}));
+      const result = await doFetch(baseUrl + 'ratings', options);
+      return result;
+    } catch (error) {
+      throw new Error(
+        'Apihooks.js useRating postRating error: ' + error.message);
+    }
+  };
+
+  const requestRatingByFileId = async (fileId) => {
+    try {
+      const result = await doFetch(baseUrl + 'ratings/file/' + fileId);
+      console.log('Apihooks.js useRating getRatingByFileId result[0]:',
+        result[0]);
+      if (result[0] !== undefined) {
+        return result[0];
+      } else {
+        return result;
+      }
+      // return result;
+
+    } catch (error) {
+      throw new Error(
+        'Apihooks.js useRating getRatingByFileId error: ' + error.message);
+    }
+  };
+
+  return {postRating, requestRatingByFileId};
+};
+
 export {
   useLoadMedia,
   useLogin,
@@ -377,4 +431,5 @@ export {
   useFavourite,
   useComment,
   useLoadComments,
+  useRating,
 };

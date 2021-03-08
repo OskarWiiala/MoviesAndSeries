@@ -53,7 +53,7 @@ const CommentListItem = ({navigation, singleMedia, isMyComment}) => {
   };
   useEffect(() => {
     fetchOwner();
-  });
+  }, []);
   return (
     <RNEListItem>
       <RNEListItem.Content style={styles.Content}>
