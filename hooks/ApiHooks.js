@@ -3,7 +3,6 @@ import axios from 'axios';
 import {useContext, useEffect, useState} from 'react';
 import {MainContext} from '../contexts/MainContext';
 import {appIdentifier, baseUrl} from '../utils/Variables';
-import {sortBy} from '../views/Home';
 
 // general function for fetching (options default value is empty object)
 const doFetch = async (url, options = {}) => {
@@ -185,7 +184,7 @@ const useTag = () => {
 };
 
 const useMedia = () => {
-  const {postRating} = useRating();
+  const {postRating, deleteRating} = useRating();
   const upload = async (fd, rating, token) => {
     const options = {
       method: 'POST',
@@ -208,16 +207,21 @@ const useMedia = () => {
     }
   };
 
-  const updateFile = async (fileId, fileInfo, token) => {
+  const updateFile = async (fileId, fileInfoTitle, fileInfoDescription,fileInfoRating, token) => {
     const options = {
       method: 'PUT',
       headers: {
         'x-access-token': token,
         'Content-type': 'application/json',
       },
-      body: JSON.stringify(fileInfo),
+      body: JSON.stringify({
+        title: fileInfoTitle,
+        description: fileInfoDescription,
+      }),
     };
     try {
+      const resultDeleteRating = await deleteRating(fileId, token);
+      const addNewRating = await postRating(fileId, fileInfoRating, token)
       const result = await doFetch(baseUrl + 'media/' + fileId, options);
       return result;
     } catch (error) {
@@ -401,6 +405,25 @@ const useRating = () => {
     }
   };
 
+  const deleteRating = async (fileId, token) => {
+    const options = {
+      method: 'DELETE',
+      headers: {
+        'x-access-token': token,
+        'Content-type': 'application/json',
+      },
+    };
+    try {
+      console.log(
+        'Apihooks.js useRating deleteRating values: ' + 'fileId: ' + fileId + ' token: ' + token);
+      const result = await doFetch(baseUrl + 'ratings/file/' + fileId, options);
+      return result;
+    } catch (error) {
+      throw new Error(
+        'Apihooks.js useRating deleteRating error: ' + error.message);
+    }
+  };
+
   const requestRatingByFileId = async (fileId) => {
     try {
       const result = await doFetch(baseUrl + 'ratings/file/' + fileId);
@@ -419,7 +442,7 @@ const useRating = () => {
     }
   };
 
-  return {postRating, requestRatingByFileId};
+  return {postRating, deleteRating, requestRatingByFileId};
 };
 
 export {

@@ -8,10 +8,10 @@ import {
   Card,
   ListItem,
   Text,
-  Icon,
+  Icon, ListItem as RNEListItem,
 } from 'react-native-elements';
 import moment from 'moment';
-import {useTag, useUser, useFavourite} from '../hooks/ApiHooks';
+import {useTag, useUser, useFavourite, useRating} from '../hooks/ApiHooks';
 import {Video} from 'expo-av';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ScreenOrientation from 'expo-screen-orientation';
@@ -25,6 +25,8 @@ const Single = ({navigation, route}) => {
   const {getFilesByTag} = useTag();
   const {getUser, checkToken} = useUser();
   const {checkFavourite, postFavourite, deleteFavourite} = useFavourite();
+  const [rating, setRating] = useState({rating: 'unrated'});
+  const {requestRatingByFileId} = useRating();
   const [videoRef, setVideoRef] = useState(null);
 
   const fetchAvatar = async () => {
@@ -45,6 +47,14 @@ const Single = ({navigation, route}) => {
     } catch (error) {
       console.error(error.message);
     }
+  };
+
+  const fetchRating = async () => {
+    console.log(
+      'ListItem.js fetchRating singleMedia.fileId: ' + file.file_id);
+    const ratingData = await requestRatingByFileId(file.file_id);
+    setRating(ratingData);
+    console.log('ListItem.js fetchRating ratingData:', ratingData);
   };
 
   const unlock = async () => {
@@ -80,6 +90,7 @@ const Single = ({navigation, route}) => {
     unlock();
     fetchAvatar();
     fetchOwner();
+    fetchRating();
 
     const orientSub = ScreenOrientation.addOrientationChangeListener((evt) => {
       console.log('orientation', evt);
@@ -151,7 +162,184 @@ const Single = ({navigation, route}) => {
         <Card.Divider/>
         <Card.Title style={styles.timeAdded}>{moment(file.time_added).
           format('LLL')}</Card.Title>
-        <Text>Rating 1 - 5 stars</Text>
+        <Text>{rating.rating === undefined && (
+          <> <Text>
+            Unrated
+          </Text>
+          </>
+        )}
+          {rating.rating === 1 && (
+            <>
+              <Icon
+                name="star"
+                type="antdesign"
+                size={25}
+                color="#FFB800"
+              />
+              <Icon
+                name="staro"
+                type="antdesign"
+                size={25}
+                color="#bfbfbf"
+              />
+              <Icon
+                name="staro"
+                type="antdesign"
+                size={25}
+                color="#bfbfbf"
+              />
+              <Icon
+                name="staro"
+                type="antdesign"
+                size={25}
+                color="#bfbfbf"
+              />
+              <Icon
+                name="staro"
+                type="antdesign"
+                size={25}
+                color="#bfbfbf"
+              />
+            </>
+          )}
+          {rating.rating === 2 && (
+            <>
+              <Icon
+                name="star"
+                type="antdesign"
+                size={25}
+                color="#FFB800"
+              />
+              <Icon
+                name="star"
+                type="antdesign"
+                size={25}
+                color="#FFB800"
+              />
+              <Icon
+                name="staro"
+                type="antdesign"
+                size={25}
+                color="#bfbfbf"
+              />
+              <Icon
+                name="staro"
+                type="antdesign"
+                size={25}
+                color="#bfbfbf"
+              />
+              <Icon
+                name="staro"
+                type="antdesign"
+                size={25}
+                color="#bfbfbf"
+              />
+            </>
+          )}
+          {rating.rating === 3 && (
+            <>
+              <Icon
+                name="star"
+                type="antdesign"
+                size={25}
+                color="#FFB800"
+              />
+              <Icon
+                name="star"
+                type="antdesign"
+                size={25}
+                color="#FFB800"
+              />
+              <Icon
+                name="star"
+                type="antdesign"
+                size={25}
+                color="#FFB800"
+              />
+              <Icon
+                name="staro"
+                type="antdesign"
+                size={25}
+                color="#bfbfbf"
+              />
+              <Icon
+                name="staro"
+                type="antdesign"
+                size={25}
+                color="#bfbfbf"
+              />
+            </>
+          )}
+          {rating.rating === 4 && (
+            <>
+              <Icon
+                name="star"
+                type="antdesign"
+                size={25}
+                color="#FFB800"
+              />
+              <Icon
+                name="star"
+                type="antdesign"
+                size={25}
+                color="#FFB800"
+              />
+              <Icon
+                name="star"
+                type="antdesign"
+                size={25}
+                color="#FFB800"
+              />
+              <Icon
+                name="star"
+                type="antdesign"
+                size={25}
+                color="#FFB800"
+              />
+              <Icon
+                name="staro"
+                type="antdesign"
+                size={25}
+                color="#bfbfbf"
+              />
+
+            </>
+          )}
+          {rating.rating === 5 && (
+            <>
+              <Icon
+                name="star"
+                type="antdesign"
+                size={25}
+                color="#FFB800"
+              />
+              <Icon
+                name="star"
+                type="antdesign"
+                size={25}
+                color="#FFB800"
+              />
+              <Icon
+                name="star"
+                type="antdesign"
+                size={25}
+                color="#FFB800"
+              />
+              <Icon
+                name="star"
+                type="antdesign"
+                size={25}
+                color="#FFB800"
+              />
+              <Icon
+                name="star"
+                type="antdesign"
+                size={25}
+                color="#FFB800"
+              />
+
+            </>
+          )}</Text>
         <ListItem>
           <Text style={styles.owner}>By: {owner.username}</Text>
           {/*<Avatar source={{uri: avatar}}/>*/}

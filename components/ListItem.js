@@ -78,31 +78,6 @@ const ListItem = ({navigation, singleMedia, isMyFile}) => {
           square
           source={{uri: uploadsURL + singleMedia.thumbnails.w160}}
         />
-        <RNEListItem.Subtitle style={styles.ReviewUser}>
-          <Text>Reviewed by: </Text>
-          {owner.username}
-        </RNEListItem.Subtitle>
-        <RNEListItem.Subtitle numberOfLines={3} style={styles.desc}>
-          {singleMedia.description}
-        </RNEListItem.Subtitle>
-        <RNEListItem style={styles.ownerButtons}>
-          {isMyFile && (
-            <>
-              <Button
-                paddingRight="100"
-                title="Modify"
-                onPress={() => navigation.push('Modify',
-                  {navigation, file: singleMedia})}
-              />
-              <Button
-                // style={styles.buttonD}
-                title="Delete"
-                color="red"
-                onPress={doDelete}
-              />
-            </>
-          )}
-        </RNEListItem>
         <RNEListItem.Subtitle style={styles.rating}>
           {rating.rating === undefined && (
             <> <Text>
@@ -279,10 +254,17 @@ const ListItem = ({navigation, singleMedia, isMyFile}) => {
                 size={25}
                 color="#FFB800"
               />
-
             </>
           )}
         </RNEListItem.Subtitle>
+        <RNEListItem.Subtitle style={styles.ReviewUser}>
+          <Text>Reviewed by: </Text>
+          {owner.username}
+        </RNEListItem.Subtitle>
+        <RNEListItem.Subtitle numberOfLines={3} style={styles.desc}>
+          {singleMedia.description}
+        </RNEListItem.Subtitle>
+
         <RNEListItem style={styles.reviewButton}>
           <Button
             color="#F54029"
@@ -291,6 +273,24 @@ const ListItem = ({navigation, singleMedia, isMyFile}) => {
               navigation.navigate('Single', {file: singleMedia});
             }}
           />
+        </RNEListItem>
+        <RNEListItem style={styles.ownerButtons}>
+          {isMyFile && (
+            <>
+              <Button
+                paddingRight="100"
+                title="Modify"
+                onPress={() => navigation.push('Modify',
+                  {navigation, file: singleMedia})}
+              />
+              <Button
+                // style={styles.buttonD}
+                title="Delete"
+                color="red"
+                onPress={doDelete}
+              />
+            </>
+          )}
         </RNEListItem>
       </RNEListItem.Content>
       <RNEListItem.Chevron/>
