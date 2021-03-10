@@ -45,7 +45,7 @@ const Login = ({navigation}) => {
 
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       enabled
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -84,7 +84,7 @@ const Login = ({navigation}) => {
               </ListItem>
               <Button navigation={navigation}
                       buttonStyle={{backgroundColor: '#F54029'}}
-                      title="Continue without account        CURRENTLY BROKEN"
+                      title="Continue as Guest"
                       onPress={() => {navigation.navigate('Home')}}/>
             </Card>
           </View>
