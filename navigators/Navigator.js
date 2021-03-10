@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import {
@@ -17,10 +17,9 @@ import SearchFiles from '../views/SearchFiles';
 import MyFavourites from '../views/MyFavourites';
 import Modify from '../views/Modify';
 import Comment from '../views/Comment';
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {Image} from 'react-native';
 
-// const Tab = createBottomTabNavigator();
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+
 const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
 

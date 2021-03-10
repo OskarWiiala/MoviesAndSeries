@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Card, Text, ListItem, Avatar, Button} from 'react-native-elements';
 import {useTag} from '../hooks/ApiHooks';
-import {uploadsURL} from '../utils/Variables';
+import {guestUserId, uploadsURL} from '../utils/Variables';
 import {ScrollView} from 'react-native-gesture-handler';
 
 const Profile = ({navigation}) => {
@@ -24,6 +24,34 @@ const Profile = ({navigation}) => {
       console.log('we get here 4');
       navigation.navigate('Login');
 
+    }
+  };
+
+  const enterFavourites = () => {
+    try {
+      console.log('Profile.js enterFavourites user_id:', user.user_id);
+      if (user.user_id === guestUserId) {
+        alert(
+          'You must be logged in on a real account to access personal favourites');
+      } else {
+        navigation.push('MyFavourites');
+      }
+    } catch (error) {
+      console.error('Profile.js enterMyFavourites error:', error);
+    }
+  };
+
+  const enterMyFiles = () => {
+    try {
+      console.log('Profile.js enterMyFiles user_id:', user.user_id);
+      if (user.user_id === guestUserId) {
+        alert(
+          'You must be logged in on a real account to access personal files');
+      } else {
+        navigation.push('My Files');
+      }
+    } catch (error) {
+      console.error('Profile.js enterMyFiles error:', error);
     }
   };
 
@@ -60,14 +88,14 @@ const Profile = ({navigation}) => {
           <Avatar icon={{name: 'user', type: 'font-awesome', color: 'black'}}/>
           <Text>{user.full_name}</Text>
         </ListItem>
-        <ListItem bottomDivider onPress={() => navigation.push('My Files')}>
+        <ListItem bottomDivider onPress={enterMyFiles}>
           <Avatar icon={{name: 'perm-media', color: 'black'}}/>
           <ListItem.Content>
             <ListItem.Title>My Files</ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron/>
         </ListItem>
-        <ListItem bottomDivider onPress={() => navigation.push('MyFavourites')}>
+        <ListItem bottomDivider onPress={enterFavourites}>
           <Avatar icon={{name: 'heart', type: 'font-awesome', color: 'black'}}/>
           <ListItem.Content>
             <ListItem.Title>My Favourites</ListItem.Title>
