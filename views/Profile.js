@@ -34,6 +34,7 @@ const Profile = ({navigation}) => {
   };
 
   const doDelete = () => {
+    if (user.user_id !== guestUserId) {
     Alert.alert(
       'Delete',
       'this file permanently?',
@@ -57,6 +58,9 @@ const Profile = ({navigation}) => {
       ],
       {cancelable: false},
     );
+    } else {
+      alert('You must log in to use this feature');
+    }
   };
 
   const enterFavourites = () => {
@@ -100,12 +104,16 @@ const Profile = ({navigation}) => {
         />
         <ListItem style={styles.uploadAvatar}>
         <Button color="red" onPress={() => {
+          if(user.user_id !== guestUserId) {
           if(avatar != 'https://cdn.discordapp.com/attachments/556437496158879746/818575758016118854/UX_-_Figma_-_Profile.png') {
             Alert.alert("Delete previous avatar first!")
           } else {
               navigation.navigate('UploadAvatar');
             }
-            }}
+            } else {
+            alert('You must log in to use this feature')
+          }
+        }}
             title="Upload avatar"></Button>
 
         <Button color="red"
