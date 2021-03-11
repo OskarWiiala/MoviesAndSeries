@@ -472,6 +472,7 @@ const useAvatar = () => {
       method: 'DELETE',
       headers: {
         'x-access-token': token,
+        'Content-type': 'application/json',
       },
     };
     try {

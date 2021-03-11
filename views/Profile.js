@@ -12,11 +12,10 @@ const Profile = ({navigation}) => {
   const {isLoggedIn, setIsLoggedIn, user} = useContext(MainContext);
   const [avatar, setAvatar] = useState('https://cdn.discordapp.com/attachments/556437496158879746/818575758016118854/UX_-_Figma_-_Profile.png');
   const {deleteAvatar} = useAvatar();
-  const [file_id, setFile_id] = useState('');
   const {setUpdate, update} = useContext(MainContext);
-  const [avatarlist, setAvatarlist] = useState("");
+  const {getFilesByTag} = useTag();
   console.log(user.user_id);
-  fetchAvatar(setAvatar, setFile_id, setAvatarlist);
+  fetchAvatar(setAvatar);
 
 
   const logout = async () => {
@@ -41,17 +40,15 @@ const Profile = ({navigation}) => {
       [
         {text: 'Cancel'},
         {
-          title: 'Ok',
+          text: 'Ok',
           onPress: async () => {
             const userToken = await AsyncStorage.getItem('userToken');
             try {
-              if (avatarlist.length == 1) {
-                avatarlist.pop().clear();
-                fetchAvatar();
-              } else {
-              await deleteAvatar(file_id, userToken);
+              const avatarList = await getFilesByTag('avatar_' + user.user_id);
+              const id = avatarList.pop().file_id;
+              console.log("this", id);
+              await deleteAvatar(id, userToken);
               setUpdate(update + 1);
-            }
             } catch (error) {
               console.error(error);
             }
@@ -150,17 +147,14 @@ const Profile = ({navigation}) => {
   );
 };
 
-const fetchAvatar = async (setAvatar, setFile_id, setAvatarlist) => {
+const fetchAvatar = async (setAvatar) => {
   const {isLoggedIn, setIsLoggedIn, user} = useContext(MainContext);
   const {getFilesByTag} = useTag();
   try {
     const avatarList = await getFilesByTag('avatar_' + user.user_id);
-    if (avatarList.length > 1) {
+    if (avatarList.length >= 1) {
       setAvatar(uploadsURL + avatarList.pop().filename);
-      console.log("avatarid", setFile_id);
-      setFile_id(avatarList.pop().file_id);
-      setAvatarlist(avatarList.length);
-    } else if (avatarList.length == 1) {
+    } else if (avatarList.length <= 1) {
       setAvatar('https://cdn.discordapp.com/attachments/556437496158879746/818575758016118854/UX_-_Figma_-_Profile.png');
     }
   } catch (error) {
