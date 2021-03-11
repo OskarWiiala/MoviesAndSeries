@@ -89,6 +89,27 @@ const useSignUpForm = (callback) => {
     });
   };
 
+  const checkPasswordMatch = async () => {
+    console.log("logging", inputs.password);
+    let error;
+      if (inputs.password != inputs.confirmPassword) {
+        setRegisterErrors((registerErrors) => {
+          return {
+            ...registerErrors,
+            confirmPassword: 'Passwords do not match',
+          };
+        });
+      } else {
+        setRegisterErrors((registerErrors) => {
+          return {
+            ...registerErrors,
+            confirmPassword: '',
+
+          };
+        });
+  }
+  }
+
   const checkUserAvailable = async (event) => {
     console.log('usernameInput', event.nativeEvent.text);
 
@@ -115,6 +136,7 @@ const useSignUpForm = (callback) => {
       constraints);
     const emailError = validator('username', inputs.email, constraints);
     const fullnameError = validator('username', inputs.full_name, constraints);
+    const matchingError = validator('username', inputs.confirmPassword, constraints);
 
     setRegisterErrors((registerErrors) => {
       return {
@@ -124,10 +146,11 @@ const useSignUpForm = (callback) => {
         confirmPassword: confirmError,
         email: emailError,
         full_name: fullnameError,
+        confirmPassword: matchingError,
       };
     });
 
-    if(usernameError !== null || passwordError !== null || confirmError !== null || emailError !== null  || fullnameError !== null) {
+    if(usernameError !== null || passwordError !== null || confirmError !== null || emailError !== null  || fullnameError !== null || matchingError !== null || inputs.password !== inputs.confirmPassword) {
       return false;
     }
 
@@ -140,7 +163,8 @@ const useSignUpForm = (callback) => {
     validateOnSend,
     checkUserAvailable,
     registerErrors,
-    handleInputEnd
+    handleInputEnd,
+    checkPasswordMatch,
   };
 };
 

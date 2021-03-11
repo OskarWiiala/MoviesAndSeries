@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {Alert, View} from 'react-native';
 import PropTypes from 'prop-types';
 import {useLogin, useUser} from '../hooks/ApiHooks';
@@ -16,7 +16,8 @@ const RegisterForm = ({navigation}) => {
     handleInputEnd,
     validateOnSend,
     checkUserAvailable,
-    registerErrors
+    registerErrors,
+    checkPasswordMatch,
   } = useSignUpForm();
   const {postRegister} = useUser();
   const {postLogin} = useLogin();
@@ -25,7 +26,7 @@ const RegisterForm = ({navigation}) => {
     if(!validateOnSend()) {
       Alert.alert('input validation failed')
       console.log('RegisterForm.js validateOnSend failed')
-    }
+    }else {
     delete inputs.confirmPassword;
     try {
       const result = await postRegister(inputs);
@@ -40,6 +41,7 @@ const RegisterForm = ({navigation}) => {
       console.log('registration error', error);
       Alert.alert(error.message);
     }
+  }
   };
 
   return (
@@ -72,6 +74,7 @@ const RegisterForm = ({navigation}) => {
         placeholder="confirm password"
         onChangeText={(txt) => handleInputChange('confirmPassword', txt)}
         onEndEditing={(event) => handleInputEnd('confirmPassword', event.nativeEvent.text)}
+        onEndEditing={(event) => checkPasswordMatch('confirmPassword', event.nativeEvent.text)}
         secureTextEntry={true}
         errorMessage={registerErrors.confirmPassword}
         inputContainerStyle={{backgroundColor: '#EEEEEE'}}

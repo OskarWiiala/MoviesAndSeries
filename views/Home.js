@@ -16,6 +16,7 @@ const Home = ({navigation}) => {
 
   const setSelectedForList = async () => {
     try {
+      console.log("home", selected);
       await AsyncStorage.setItem('selected', selected);
     }catch (error) {
       console.error(error.message);
@@ -63,7 +64,6 @@ const Home = ({navigation}) => {
               setSelected(itemvalue)
             }
           >
-            <Picker.Item label="Sort by" value="" />
             <Picker.Item label="Newest" value="newest" />
             <Picker.Item label="Oldest" value="oldest" />
           </Picker>

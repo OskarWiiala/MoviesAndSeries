@@ -19,6 +19,8 @@ import Modify from '../views/Modify';
 import Comment from '../views/Comment';
 
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {Image} from 'react-native';
+import UploadAvatar from '../views/UploadAvatar';
 
 const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
@@ -77,6 +79,7 @@ const StackScreen = () => {
           <Stack.Screen name="MyFavourites" component={MyFavourites}/>
           <Stack.Screen name="Comment" component={Comment}/>
           <Stack.Screen name="Single" component={Single}/>
+          <Stack.Screen name="UploadAvatar" component={UploadAvatar}/>
         </>
       ) : (
         <>
