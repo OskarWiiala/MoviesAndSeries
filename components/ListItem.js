@@ -1,8 +1,13 @@
 import React, {useContext, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {uploadsURL} from '../utils/Variables';
-import {Avatar, Icon, ListItem as RNEListItem} from 'react-native-elements';
-import {Button, StyleSheet} from 'react-native';
+import {
+  Avatar,
+  Icon,
+  ListItem as RNEListItem,
+  Button,
+} from 'react-native-elements';
+import {StyleSheet, View} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useMedia, useUser, useRating} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
@@ -67,7 +72,7 @@ const ListItem = ({navigation, singleMedia, isMyFile}) => {
     fetchRating();
   }, []);
   return (
-    <RNEListItem style={styles.Item}>
+    <RNEListItem>
       <RNEListItem.Content style={styles.Content}>
         <RNEListItem.Title style={styles.Title}>
           {singleMedia.title}
@@ -257,41 +262,46 @@ const ListItem = ({navigation, singleMedia, isMyFile}) => {
             </>
           )}
         </RNEListItem.Subtitle>
-        <RNEListItem.Subtitle style={styles.ReviewUser}>
-          <Text>Reviewed by: </Text>
+        <RNEListItem.Subtitle style={styles.reviewBy}>
+          <Text>reviewed by:</Text>
+        </RNEListItem.Subtitle>
+        <RNEListItem.Subtitle style={styles.reviewUser}>
           {owner.username}
         </RNEListItem.Subtitle>
+        <RNEListItem style={styles.line}/>
         <RNEListItem.Subtitle numberOfLines={3} style={styles.desc}>
           {singleMedia.description}
         </RNEListItem.Subtitle>
 
-        <RNEListItem style={styles.reviewButton}>
-          <Button
-            color="#F54029"
-            title="See review"
-            onPress={() => {
-              navigation.navigate('Single', {file: singleMedia});
-            }}
+        <RNEListItem style={styles.reviewButtonContainer}>
+          <Button buttonStyle={styles.reviewButton}
+                  containerStyle={{elevation: 6}}
+                  titleStyle={{fontSize: 22}}
+                  title='See review'
+                  onPress={() => {
+                    navigation.navigate('Single', {file: singleMedia});
+                  }}
           />
         </RNEListItem>
-        <RNEListItem style={styles.ownerButtons}>
-          {isMyFile && (
+        {isMyFile && (
+          <RNEListItem style={styles.ownerButtons}>
             <>
               <Button
-                paddingRight="100"
+                buttonStyle={styles.ownerButtonStyle}
+                titleStyle={{color: 'dodgerblue'}}
                 title="Modify"
                 onPress={() => navigation.push('Modify',
                   {navigation, file: singleMedia})}
               />
               <Button
-                // style={styles.buttonD}
+                buttonStyle={styles.ownerButtonStyle}
+                titleStyle={{color: 'dodgerblue'}}
                 title="Delete"
-                color="red"
                 onPress={doDelete}
               />
             </>
-          )}
-        </RNEListItem>
+          </RNEListItem>
+        )}
       </RNEListItem.Content>
       <RNEListItem.Chevron/>
     </RNEListItem>
@@ -300,30 +310,32 @@ const ListItem = ({navigation, singleMedia, isMyFile}) => {
 
 const styles = StyleSheet.create({
   ownerButtons: {
-    alignSelf: 'flex-start',
+    alignItems: 'center',
+  },
+  ownerButtonStyle: {
+    backgroundColor: 'white',
+    marginLeft: 20,
+    marginRight: 20,
   },
   Content: {
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-
     marginLeft: 5,
     marginRight: 5,
-    borderWidth: 1,
-    borderColor: 'black',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowOpacity: 0.37,
-    shadowRadius: 7.49,
+    borderWidth: 2,
+    borderColor: 'grey',
+  },
+  reviewButtonContainer: {
+    marginBottom: 20,
+    width: '100%',
+    alignItems: 'center',
 
-    elevation: 0,
   },
   reviewButton: {
-    paddingBottom: 20,
-    elevation: 12,
+    backgroundColor: '#F54029',
+    width: '100%',
+    height: 60,
   },
   rating: {
     alignSelf: 'flex-start',
@@ -331,29 +343,52 @@ const styles = StyleSheet.create({
     color: 'black',
     marginLeft: 20,
     elevation: 12,
+    marginTop: 10,
+    marginBottom: 15,
   },
   Image: {
+    marginTop: 15,
+    marginBottom: 15,
     width: 300,
     height: 100,
     flex: 2,
   },
   Title: {
-    color: 'black',
+    backgroundColor: '#F54029',
+    color: 'white',
+    height: 'auto',
+    width: '100%',
     fontSize: 25,
     justifyContent: 'center',
+    textAlign: 'center',
     fontWeight: 'bold',
-    paddingBottom: 10,
+    // paddingBottom: 10,
+    marginTop: 10,
+    marginBottom: 10,
   },
   desc: {
-    fontSize: 17,
+    fontSize: 22,
     color: 'black',
     paddingTop: 10,
     marginLeft: 20,
     marginRight: 20,
   },
-  ReviewUser: {
+  reviewBy: {
+    alignSelf: 'flex-start',
+    marginLeft: 20,
+    fontSize: 14,
+    color: 'grey',
+  },
+  reviewUser: {
+    alignSelf: 'flex-start',
+    marginLeft: 20,
     fontSize: 17,
     color: 'black',
+  },
+  line: {
+    borderBottomColor: '#D3D3D3',
+    borderBottomWidth: 1,
+    width: '90%',
   },
 });
 
