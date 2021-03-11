@@ -33,7 +33,7 @@ const ListItem = ({navigation, singleMedia, isMyFile}) => {
       [
         {text: 'Cancel'},
         {
-          title: 'Ok',
+          text: 'Ok',
           onPress: async () => {
             const userToken = await AsyncStorage.getItem('userToken');
             try {

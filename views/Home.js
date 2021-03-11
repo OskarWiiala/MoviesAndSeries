@@ -4,24 +4,11 @@ import List from '../components/List';
 import PropTypes from 'prop-types';
 import {Input, Button} from 'react-native-elements';
 import useSearchForm from '../hooks/SearchHooks';
-import {Picker} from '@react-native-picker/picker';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Home = ({navigation}) => {
   const [loading, setLoading] = useState(false);
-  const [selected, setSelected] = useState({itemvalue: ''});
   const {inputs, handleInputChange} = useSearchForm();
-  console.log(selected);
-
-  const setSelectedForList = async () => {
-    try {
-      console.log("home", selected);
-      await AsyncStorage.setItem('selected', selected);
-    }catch (error) {
-      console.error(error.message);
-    }
-  }
 
   return (
     <View>
@@ -58,15 +45,6 @@ const Home = ({navigation}) => {
               })
             }
           />
-          <Picker onPress={setSelectedForList()} style={styles.picker}
-            selectedValue={selected}
-            onValueChange={(itemvalue) =>
-              setSelected(itemvalue)
-            }
-          >
-            <Picker.Item label="Newest" value="newest" />
-            <Picker.Item label="Oldest" value="oldest" />
-          </Picker>
         </View>
       </View>
       <List navigation={navigation} myFilesOnly={false} searchOnly={false} />

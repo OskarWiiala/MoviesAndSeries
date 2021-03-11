@@ -23,7 +23,7 @@ const CommentListItem = ({navigation, singleMedia, isMyComment}) => {
       [
         {text: 'Cancel'},
         {
-          title: 'Ok',
+          text: 'Ok',
           onPress: async () => {
             const userToken = await AsyncStorage.getItem('userToken');
             try {
