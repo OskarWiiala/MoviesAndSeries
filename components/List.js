@@ -50,6 +50,7 @@ const List = ({navigation, myFilesOnly, searchOnly, inputs, myFavouritesOnly}) =
       <FlatList
         style={{width: '100%', height: '80%'}}
         data={mediaArray.reverse()}
+        // data={mediaArray}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({item}) => (
           <ListItem
