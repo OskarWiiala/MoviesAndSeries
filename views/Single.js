@@ -110,7 +110,7 @@ const Single = ({navigation, route}) => {
 
   const doCheckFavourite = async () => {
     try {
-      if(user.user_id !== guestUserId) {
+      if (user.user_id !== guestUserId) {
         const userToken = await AsyncStorage.getItem('userToken');
         const currentUserData = await checkToken(userToken);
         const userId = currentUserData.user_id;
@@ -121,14 +121,14 @@ const Single = ({navigation, route}) => {
         alert('You must log in to favourite reviews');
       }
     } catch (error) {
-      console.error('Single.js doCheckFavourite error:', error)
+      console.error('Single.js doCheckFavourite error:', error);
     }
   };
 
   const enterPostComment = () => {
     try {
-      if(user.user_id !== guestUserId) {
-        navigation.push('Comment', {navigation, file})
+      if (user.user_id !== guestUserId) {
+        navigation.push('Comment', {navigation, file});
       } else {
         alert('You must log in to comment on reviews');
       }
@@ -160,7 +160,7 @@ const Single = ({navigation, route}) => {
   return (
     <ScrollView>
       <Card>
-        <Card.Title style={styles.singleTitle}>{file.title}</Card.Title>
+        <Card.Title h4 style={styles.singleTitle}>{file.title}</Card.Title>
 
         <Card.Divider/>
         {file.media_type === 'image' ? (
@@ -406,6 +406,10 @@ const Single = ({navigation, route}) => {
         </View>
       </Card>
 
+      <View style={styles.showComments}>
+        <Text h4 style={{color: 'white'}}>Comments</Text>
+      </View>
+
       <CommentList navigation={navigation} route={file}/>
 
     </ScrollView>
@@ -413,6 +417,15 @@ const Single = ({navigation, route}) => {
 };
 
 const styles = StyleSheet.create({
+  showComments: {
+    backgroundColor: 'dodgerblue',
+    marginTop: 15,
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingRight: 5,
+    paddingLeft: 5,
+    alignItems: 'center',
+  },
   image: {
     width: '100%',
     height: undefined,
@@ -424,7 +437,6 @@ const styles = StyleSheet.create({
   singleTitle: {
     backgroundColor: '#F54029',
     color: 'white',
-    // fontWeight: 'normal',
     fontSize: 18,
     marginLeft: -16,
     marginRight: -16,

@@ -63,6 +63,7 @@ const List = ({navigation, myFilesOnly, searchOnly, inputs, myFavouritesOnly}) =
   }else if (selected === "newest"){
     return (
       <FlatList
+        style={{width: '100%', height: '80%'}}
         data={mediaArray.reverse()}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({item}) => (

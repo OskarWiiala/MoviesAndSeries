@@ -85,7 +85,7 @@ const CommentListItem = ({navigation, singleMedia, isMyComment}) => {
 
 const styles = StyleSheet.create({
   deleteButton: {
-    alignSelf: 'flex-start',
+    alignSelf: 'center',
   },
   Content: {
     flex: 1,
@@ -94,9 +94,8 @@ const styles = StyleSheet.create({
 
     marginLeft: 5,
     marginRight: 5,
-    borderWidth: 1,
-    borderColor: 'black',
-
+    borderBottomWidth: 1,
+    borderBottomColor: '#D3D3D3',
   },
 });
 

@@ -168,8 +168,8 @@ const Upload = ({navigation}) => {
     }
   };
   return (
-    <ScrollView >
-      <KeyboardAvoidingView behavior="position" enabled >
+    <ScrollView>
+      <KeyboardAvoidingView behavior="position" enabled>
         {userId !== guestUserId && (
           <Card>
             <Text style={{alignSelf: 'center', marginBottom: 10}} h4>Create a
@@ -237,13 +237,24 @@ const Upload = ({navigation}) => {
                     onPress={() => doReset(true)}/>
             <Text style={{alignSelf: 'center', marginBottom: 15}}>Choose
               image/video from:</Text>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{flexDirection: 'row', marginBottom: 20}}>
               <View style={{flex: 1}}>
                 <Button buttonStyle={styles.buttonChoose} title="Device"
+                        containerStyle={{
+                          elevation: 6, width: 150,
+                          alignSelf: 'center',
+                          height: 50,
+                        }}
                         onPress={() => pickImage(true)}/>
               </View>
               <View style={{flex: 1}}>
-                <Button buttonStyle={styles.buttonChoose} title="Camera"
+                <Button buttonStyle={styles.buttonChoose}
+                        containerStyle={{
+                          elevation: 6, width: 150,
+                          alignSelf: 'center',
+                          height: 50,
+                        }}
+                        title="Camera"
                         onPress={() => pickImage(false)}/>
               </View>
             </View>
@@ -263,10 +274,12 @@ const Upload = ({navigation}) => {
         {userId === guestUserId && (
           <View style={styles.guestText}>
             <View>
-            <Text style={styles.messageBoxTitleText}>Log in</Text>
+              <Text style={styles.messageBoxTitleText}>Log in</Text>
             </View>
             <View>
-              <Text style={styles.messageBoxInfoText}>You are currently using a guest account and must make a real account to upload reviews. You can log out in the profile page.</Text>
+              <Text style={styles.messageBoxInfoText}>You are currently using a
+                guest account and must make a real account to upload reviews.
+                You can log out in the profile page.</Text>
             </View>
           </View>
         )}
@@ -277,25 +290,25 @@ const Upload = ({navigation}) => {
 
 const styles = StyleSheet.create({
   messageBoxTitleText: {
-    fontWeight:'bold',
-    color:'#fff',
-    textAlign:'center',
-    fontSize:20,
-    marginBottom:10
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'center',
+    fontSize: 20,
+    marginBottom: 10,
   },
   messageBoxInfoText: {
-    color:'#fff',
-    fontSize:16,
+    color: '#fff',
+    fontSize: 16,
     textAlign: 'center',
   },
   guestText: {
-    backgroundColor:'#F54029',
-    width:300,
-    paddingTop:10,
-    paddingBottom:20,
-    paddingLeft:20,
-    paddingRight:20,
-    borderRadius:10,
+    backgroundColor: '#F54029',
+    width: 300,
+    paddingTop: 10,
+    paddingBottom: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
+    borderRadius: 10,
     alignSelf: 'center',
     marginTop: '50%',
   },
@@ -307,17 +320,19 @@ const styles = StyleSheet.create({
     height: 'auto',
   },
   buttonChoose: {
-    marginBottom: 25,
+    // marginBottom: 25,
     backgroundColor: '#F54029',
     width: 150,
     alignSelf: 'center',
     height: 50,
   },
   buttonUpload: {
-    marginRight: 10,
+    width: '93%',
     backgroundColor: '#F54029',
     height: 50,
     marginLeft: 12,
+    marginRight: 12,
+    alignSelf: 'center',
   },
 
 });
