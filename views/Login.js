@@ -6,7 +6,9 @@ import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
-  Alert, StatusBar, SafeAreaView,
+  Alert,
+  StatusBar,
+  SafeAreaView,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
@@ -17,6 +19,7 @@ import RegisterForm from '../components/RegisterForm';
 import {Card, ListItem, Text, Button} from 'react-native-elements';
 import GlobalStyles from '../GlobalStyles';
 import List from '../components/List';
+import * as ScreenOrientation from 'expo-screen-orientation';
 
 const Login = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
@@ -58,12 +61,8 @@ const Login = ({navigation}) => {
       }
     }
   };
-  useEffect(() => {
-    getToken();
-  }, []);
 
   return (
-
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -79,14 +78,14 @@ const Login = ({navigation}) => {
               {formToggle ? (
                 <>
                   <Card.Title h4>Login</Card.Title>
-                  <Card.Divider/>
-                  <LoginForm navigation={navigation}/>
+                  <Card.Divider />
+                  <LoginForm navigation={navigation} />
                 </>
               ) : (
                 <>
                   <Card.Title h4>Register</Card.Title>
-                  <Card.Divider/>
-                  <RegisterForm navigation={navigation}/>
+                  <Card.Divider />
+                  <RegisterForm navigation={navigation} />
                 </>
               )}
               <ListItem
@@ -101,12 +100,15 @@ const Login = ({navigation}) => {
                       : 'Already registered? Login here.'}
                   </Text>
                 </ListItem.Content>
-                <ListItem.Chevron/>
+                <ListItem.Chevron />
               </ListItem>
-              <Button navigation={navigation}
-                      buttonStyle={{backgroundColor: '#F54029'}}
-                      title="Continue as Guest"
-                      onPress={doGuestLogin} loading={loading}/>
+              <Button
+                navigation={navigation}
+                buttonStyle={{backgroundColor: '#F54029'}}
+                title="Continue as Guest"
+                onPress={doGuestLogin}
+                loading={loading}
+              />
             </Card>
           </View>
         </View>
@@ -141,11 +143,29 @@ const styles = StyleSheet.create({
     padding: 20,
     color: 'dodgerblue',
   },
-
 });
 
 Login.propTypes = {
   navigation: PropTypes.object,
 };
 
-export default Login;
+const [Orientation, setOrientation] = useState(
+  ScreenOrientation.Orientation.PORTRAIT_UP
+);
+
+useEffect(() => {
+  getToken();
+  ScreenOrientation.getOrientationAsync().then((info) => {
+    setOrientation(info.orientation);
+  });
+
+  const subscription = ScreenOrientation.addOrientationChangeListener((evt) => {
+    setOrientation(evt.orientationInfo.orientation);
+  });
+
+  return () => {
+    ScreenOrientation.removeOrientationChangeListener(subscription);
+  };
+}, []);
+
+export default [Login, Orientation];
