@@ -11,7 +11,7 @@ import {
 import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useUser} from '../hooks/ApiHooks';
+import {useLogin, useUser} from '../hooks/ApiHooks';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
 import {Card, ListItem, Text, Button} from 'react-native-elements';
@@ -22,6 +22,27 @@ const Login = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
   const [formToggle, setFormToggle] = useState(true);
   const {checkToken} = useUser();
+  const {postLogin} = useLogin();
+  const [loading, setLoading] = useState(false);
+  const guestCredentials = {
+    username: 'MaSGuest',
+    password: 'MaSGuest',
+  };
+
+  const doGuestLogin = async () => {
+    setLoading(true);
+    try {
+      const userData = await postLogin(guestCredentials);
+      setUser(userData.user);
+      setIsLoggedIn(true);
+      await AsyncStorage.setItem('userToken', userData.token);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.error('postLogin error', error.message);
+      Alert.alert('Invalid username or password');
+    }
+  };
 
   const getToken = async () => {
     const userToken = await AsyncStorage.getItem('userToken');
@@ -45,7 +66,7 @@ const Login = ({navigation}) => {
 
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       enabled
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -84,8 +105,8 @@ const Login = ({navigation}) => {
               </ListItem>
               <Button navigation={navigation}
                       buttonStyle={{backgroundColor: '#F54029'}}
-                      title="Continue without account        CURRENTLY BROKEN"
-                      onPress={() => {navigation.navigate('Home')}}/>
+                      title="Continue as Guest"
+                      onPress={doGuestLogin} loading={loading}/>
             </Card>
           </View>
         </View>

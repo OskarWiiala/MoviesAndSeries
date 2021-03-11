@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {StyleSheet, ActivityIndicator, View} from 'react-native';
 import PropTypes from 'prop-types';
-import {uploadsURL} from '../utils/Variables';
+import {uploadsURL, guestUserId} from '../utils/Variables';
 import {
   Avatar,
   Button,
@@ -17,8 +17,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import {ScrollView} from 'react-native-gesture-handler';
 import CommentList from '../components/CommentList';
+import {MainContext} from '../contexts/MainContext';
 
 const Single = ({navigation, route}) => {
+  const {user} = useContext(MainContext);
   const {file} = route.params;
   const [avatar, setAvatar] = useState('http://placekitten.com/100');
   const [owner, setOwner] = useState({username: 'somebody'});
@@ -107,11 +109,32 @@ const Single = ({navigation, route}) => {
   }, [videoRef]);
 
   const doCheckFavourite = async () => {
-    const userToken = await AsyncStorage.getItem('userToken');
-    const currentUserData = await checkToken(userToken);
-    const userId = currentUserData.user_id;
-    const checkIsAlreadyFavourited = await checkFavourite(file.file_id, userId);
-    await doFavourite(checkIsAlreadyFavourited);
+    try {
+      if(user.user_id !== guestUserId) {
+        const userToken = await AsyncStorage.getItem('userToken');
+        const currentUserData = await checkToken(userToken);
+        const userId = currentUserData.user_id;
+        const checkIsAlreadyFavourited = await checkFavourite(file.file_id,
+          userId);
+        await doFavourite(checkIsAlreadyFavourited);
+      } else {
+        alert('You must log in to favourite reviews');
+      }
+    } catch (error) {
+      console.error('Single.js doCheckFavourite error:', error)
+    }
+  };
+
+  const enterPostComment = () => {
+    try {
+      if(user.user_id !== guestUserId) {
+        navigation.push('Comment', {navigation, file})
+      } else {
+        alert('You must log in to comment on reviews');
+      }
+    } catch (error) {
+      console.error('Single.js enterPostComment error:', error);
+    }
   };
 
   const doFavourite = async (checkIsAlreadyFavourited) => {
@@ -378,7 +401,7 @@ const Single = ({navigation, route}) => {
                   color="grey"
                 />
               }
-              onPress={() => navigation.push('Comment', {navigation, file})}/>
+              onPress={enterPostComment}/>
           </View>
         </View>
       </Card>

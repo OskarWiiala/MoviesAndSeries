@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {StatusBar, StyleSheet, View, Text} from 'react-native';
-import List, { selectedFromHome } from '../components/List';
+import List from '../components/List';
 import PropTypes from 'prop-types';
 import {Input, Button} from 'react-native-elements';
 import useSearchForm from '../hooks/SearchHooks';
