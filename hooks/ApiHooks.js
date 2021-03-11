@@ -428,8 +428,6 @@ const useRating = () => {
   const requestRatingByFileId = async (fileId) => {
     try {
       const result = await doFetch(baseUrl + 'ratings/file/' + fileId);
-      console.log('Apihooks.js useRating getRatingByFileId result[0]:',
-        result[0]);
       if (result[0] !== undefined) {
         return result[0];
       } else {

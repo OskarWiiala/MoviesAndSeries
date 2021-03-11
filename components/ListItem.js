@@ -14,6 +14,7 @@ import {MainContext} from '../contexts/MainContext';
 import {Alert} from 'react-native';
 import Single from '../views/Single';
 import {Text} from 'react-native';
+import {useIsFocused, useFocusEffect} from '@react-navigation/native';
 
 const ListItem = ({navigation, singleMedia, isMyFile}) => {
   // console.log(props);
@@ -23,6 +24,7 @@ const ListItem = ({navigation, singleMedia, isMyFile}) => {
   const [rating, setRating] = useState({rating: 'unrated'});
   const {getUser} = useUser();
   const {requestRatingByFileId} = useRating();
+  const isFocused = useIsFocused();
 
   const doDelete = () => {
     Alert.alert(
@@ -52,7 +54,6 @@ const ListItem = ({navigation, singleMedia, isMyFile}) => {
     try {
       const userToken = await AsyncStorage.getItem('userToken');
       const userData = await getUser(singleMedia.user_id, userToken);
-      console.log('ismyFile: ' + isMyFile);
       setOwner(userData);
     } catch (error) {
       console.error(error.message);
@@ -60,17 +61,24 @@ const ListItem = ({navigation, singleMedia, isMyFile}) => {
   };
 
   const fetchRating = async () => {
-    console.log(
-      'ListItem.js fetchRating singleMedia.fileId: ' + singleMedia.file_id);
+    // console.log(
+    // 'ListItem.js fetchRating singleMedia.fileId: ' + singleMedia.file_id);
     const ratingData = await requestRatingByFileId(singleMedia.file_id);
     setRating(ratingData);
-    console.log('ListItem.js fetchRating ratingData:', ratingData);
+    // console.log('ListItem.js fetchRating ratingData:', ratingData);
   };
 
-  useEffect(() => {
+  const fetchAll = async () => {
+    console.log('ListItem.js fetchAll isFocused:', isFocused)
+    await fetchOwner();
+    await fetchRating();
+  };
+
+  useFocusEffect(React.useCallback(() => {
     fetchOwner();
     fetchRating();
-  }, []);
+    console.log('Listitem.js isFocused', isFocused);
+  }, [isFocused]));
   return (
     <RNEListItem>
       <RNEListItem.Content style={styles.Content}>
@@ -84,184 +92,9 @@ const ListItem = ({navigation, singleMedia, isMyFile}) => {
           source={{uri: uploadsURL + singleMedia.thumbnails.w160}}
         />
         <RNEListItem.Subtitle style={styles.rating}>
-          {rating.rating === undefined && (
-            <> <Text>
-              Unrated
-            </Text>
-            </>
-          )}
-          {rating.rating === 1 && (
-            <>
-              <Icon
-                name="star"
-                type="antdesign"
-                size={25}
-                color="#FFB800"
-              />
-              <Icon
-                name="staro"
-                type="antdesign"
-                size={25}
-                color="#bfbfbf"
-              />
-              <Icon
-                name="staro"
-                type="antdesign"
-                size={25}
-                color="#bfbfbf"
-              />
-              <Icon
-                name="staro"
-                type="antdesign"
-                size={25}
-                color="#bfbfbf"
-              />
-              <Icon
-                name="staro"
-                type="antdesign"
-                size={25}
-                color="#bfbfbf"
-              />
-            </>
-          )}
-          {rating.rating === 2 && (
-            <>
-              <Icon
-                name="star"
-                type="antdesign"
-                size={25}
-                color="#FFB800"
-              />
-              <Icon
-                name="star"
-                type="antdesign"
-                size={25}
-                color="#FFB800"
-              />
-              <Icon
-                name="staro"
-                type="antdesign"
-                size={25}
-                color="#bfbfbf"
-              />
-              <Icon
-                name="staro"
-                type="antdesign"
-                size={25}
-                color="#bfbfbf"
-              />
-              <Icon
-                name="staro"
-                type="antdesign"
-                size={25}
-                color="#bfbfbf"
-              />
-            </>
-          )}
-          {rating.rating === 3 && (
-            <>
-              <Icon
-                name="star"
-                type="antdesign"
-                size={25}
-                color="#FFB800"
-              />
-              <Icon
-                name="star"
-                type="antdesign"
-                size={25}
-                color="#FFB800"
-              />
-              <Icon
-                name="star"
-                type="antdesign"
-                size={25}
-                color="#FFB800"
-              />
-              <Icon
-                name="staro"
-                type="antdesign"
-                size={25}
-                color="#bfbfbf"
-              />
-              <Icon
-                name="staro"
-                type="antdesign"
-                size={25}
-                color="#bfbfbf"
-              />
-            </>
-          )}
-          {rating.rating === 4 && (
-            <>
-              <Icon
-                name="star"
-                type="antdesign"
-                size={25}
-                color="#FFB800"
-              />
-              <Icon
-                name="star"
-                type="antdesign"
-                size={25}
-                color="#FFB800"
-              />
-              <Icon
-                name="star"
-                type="antdesign"
-                size={25}
-                color="#FFB800"
-              />
-              <Icon
-                name="star"
-                type="antdesign"
-                size={25}
-                color="#FFB800"
-              />
-              <Icon
-                name="staro"
-                type="antdesign"
-                size={25}
-                color="#bfbfbf"
-              />
 
-            </>
-          )}
-          {rating.rating === 5 && (
-            <>
-              <Icon
-                name="star"
-                type="antdesign"
-                size={25}
-                color="#FFB800"
-              />
-              <Icon
-                name="star"
-                type="antdesign"
-                size={25}
-                color="#FFB800"
-              />
-              <Icon
-                name="star"
-                type="antdesign"
-                size={25}
-                color="#FFB800"
-              />
-              <Icon
-                name="star"
-                type="antdesign"
-                size={25}
-                color="#FFB800"
-              />
-              <Icon
-                name="star"
-                type="antdesign"
-                size={25}
-                color="#FFB800"
-              />
-            </>
-          )}
         </RNEListItem.Subtitle>
+
         <RNEListItem.Subtitle style={styles.reviewBy}>
           <Text>reviewed by:</Text>
         </RNEListItem.Subtitle>
@@ -345,6 +178,7 @@ const styles = StyleSheet.create({
     elevation: 12,
     marginTop: 10,
     marginBottom: 15,
+    // backgroundColor: 'none',
   },
   Image: {
     marginTop: 15,
