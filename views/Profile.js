@@ -1,17 +1,24 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {StyleSheet, ActivityIndicator} from 'react-native';
+import {StyleSheet, ActivityIndicator, Alert} from 'react-native';
 import {MainContext} from '../contexts/MainContext';
 import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Card, Text, ListItem, Avatar, Button} from 'react-native-elements';
-import {useTag} from '../hooks/ApiHooks';
+import {useAvatar, useMedia, useTag} from '../hooks/ApiHooks';
 import {uploadsURL} from '../utils/Variables';
 import {ScrollView} from 'react-native-gesture-handler';
 
 const Profile = ({navigation}) => {
   const {isLoggedIn, setIsLoggedIn, user} = useContext(MainContext);
-  const [avatar, setAvatar] = useState('http://placekitten.com/640');
-  const {getFilesByTag} = useTag();
+  const [avatar, setAvatar] = useState('https://cdn.discordapp.com/attachments/556437496158879746/818575758016118854/UX_-_Figma_-_Profile.png');
+  const {deleteAvatar} = useAvatar();
+  const [file_id, setFile_id] = useState('');
+  const {setUpdate, update} = useContext(MainContext);
+  const [avatarlist, setAvatarlist] = useState("");
+  console.log(user.user_id);
+  fetchAvatar(setAvatar, setFile_id, setAvatarlist);
+
+
   const logout = async () => {
     console.log('we get here 1');
     setIsLoggedIn(false);
@@ -27,19 +34,33 @@ const Profile = ({navigation}) => {
     }
   };
 
-  useEffect(() => {
-    const fetchAvatar = async () => {
-      try {
-        const avatarList = await getFilesByTag('avatar_' + user.user_id);
-        if (avatarList.length > 0) {
-          setAvatar(uploadsURL + avatarList.pop().filename);
-        }
-      } catch (error) {
-        console.error(error.message);
-      }
-    };
-    fetchAvatar();
-  }, []);
+  const doDelete = () => {
+    Alert.alert(
+      'Delete',
+      'this file permanently?',
+      [
+        {text: 'Cancel'},
+        {
+          title: 'Ok',
+          onPress: async () => {
+            const userToken = await AsyncStorage.getItem('userToken');
+            try {
+              if (avatarlist.length == 1) {
+                avatarlist.pop().clear();
+                fetchAvatar();
+              } else {
+              await deleteAvatar(file_id, userToken);
+              setUpdate(update + 1);
+            }
+            } catch (error) {
+              console.error(error);
+            }
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  };
 
   return (
     <ScrollView>
@@ -52,6 +73,21 @@ const Profile = ({navigation}) => {
           style={styles.image}
           PlaceholderContent={<ActivityIndicator/>}
         />
+        <ListItem style={styles.uploadAvatar}>
+        <Button color="red" onPress={() => {
+          if(avatar != 'https://cdn.discordapp.com/attachments/556437496158879746/818575758016118854/UX_-_Figma_-_Profile.png') {
+            Alert.alert("Delete previous avatar first!")
+          } else {
+              navigation.navigate('UploadAvatar');
+            }
+            }}
+            title="Upload avatar"></Button>
+
+        <Button color="red"
+                title="Delete avatar"
+                onPress={doDelete}
+              />
+        </ListItem>
         <ListItem>
           <Avatar icon={{name: 'email', color: 'black'}}/>
           <Text>{user.email}</Text>
@@ -86,12 +122,38 @@ const Profile = ({navigation}) => {
   );
 };
 
+const fetchAvatar = async (setAvatar, setFile_id, setAvatarlist) => {
+  const {isLoggedIn, setIsLoggedIn, user} = useContext(MainContext);
+  const {getFilesByTag} = useTag();
+  try {
+    const avatarList = await getFilesByTag('avatar_' + user.user_id);
+    if (avatarList.length > 1) {
+      setAvatar(uploadsURL + avatarList.pop().filename);
+      console.log("avatarid", setFile_id);
+      setFile_id(avatarList.pop().file_id);
+      setAvatarlist(avatarList.length);
+    } else if (avatarList.length == 1) {
+      setAvatar('https://cdn.discordapp.com/attachments/556437496158879746/818575758016118854/UX_-_Figma_-_Profile.png');
+    }
+  } catch (error) {
+    console.error(error.message);
+  }
+  console.log("fetch", setAvatar);
+  return setAvatar;
+};
+
 const styles = StyleSheet.create({
   image: {width: '100%', height: undefined, aspectRatio: 1},
+
+  uploadAvatar: {
+    alignItems: 'center',
+  },
 });
 
 Profile.propTypes = {
   navigation: PropTypes.object,
 };
+
+export{fetchAvatar};
 
 export default Profile;

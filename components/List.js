@@ -8,7 +8,7 @@ import {MainProvider} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Home from '../views/Home';
 
-const List = ({navigation, myFilesOnly, searchOnly, inputs, myFavouritesOnly,}) => {
+const List = ({navigation, myFilesOnly, searchOnly, inputs, myFavouritesOnly}) => {
   const {isLoggedIn, user} = useContext(MainContext);
   const {mediaArray} = useLoadMedia(myFilesOnly, user.user_id, searchOnly, inputs, myFavouritesOnly,);
   const [selected, setSelected] = useState({itemvalue: ''});
@@ -27,25 +27,10 @@ const List = ({navigation, myFilesOnly, searchOnly, inputs, myFavouritesOnly,}) 
 
   useEffect(() => {
     getSelected();
-  }, []);
+  });
 
 
   if (isLoggedIn && selected === "newest") {
-    return (
-      <FlatList
-        style={{width: '100%', height: '80%'}}
-        data={mediaArray.reverse()}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({item}) => (
-          <ListItem
-            navigation={navigation}
-            singleMedia={item}
-            isMyFile={item.user_id === user.user_id}
-          />
-        )}
-      />
-    );
-  }else if (isLoggedIn && selected === "oldest") {
     return (
       <FlatList
         style={{width: '100%', height: '80%'}}
@@ -60,9 +45,10 @@ const List = ({navigation, myFilesOnly, searchOnly, inputs, myFavouritesOnly,}) 
         )}
       />
     );
-  }else if (selected === "newest"){
+  }else if (isLoggedIn && selected === "oldest") {
     return (
       <FlatList
+        style={{width: '100%', height: '80%'}}
         data={mediaArray.reverse()}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({item}) => (
@@ -74,7 +60,7 @@ const List = ({navigation, myFilesOnly, searchOnly, inputs, myFavouritesOnly,}) 
         )}
       />
     );
-  }else if (selected == null){
+  }else if (selected === "newest"){
     return (
       <FlatList
         data={mediaArray.reverse()}

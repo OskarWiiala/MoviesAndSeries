@@ -45,8 +45,9 @@ const useLoadMedia = (
         media = media.filter(
           (item) => userFavouritesArray.includes(item.file_id));
       }
+      console.log("something");
+      setMediaArray(media.reverse());
 
-      setMediaArray(media);
     } catch (error) {
       console.error('loadMedia error', error.message);
     }
@@ -445,6 +446,46 @@ const useRating = () => {
   return {postRating, deleteRating, requestRatingByFileId};
 };
 
+const useAvatar = () => {
+  const updateAvatar = async (fd, token) => {
+    const options = {
+      method: 'POST',
+      headers: {'x-access-token': token},
+      'Content-type': 'application/json',
+      data: fd,
+      url: baseUrl + 'media',
+    };
+    console.log('apihooks upload', options);
+    try {
+
+      const response = await axios(options);
+      console.log('axios good');
+      return response.data;
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  };
+
+
+  const deleteAvatar = async (fileId, token) => {
+    const options = {
+      method: 'DELETE',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    try {
+      const result = await doFetch(baseUrl + 'media/' + fileId, options);
+      return result;
+    } catch (error) {
+      throw new Error(
+        'Apihooks.js useAvatar deleteAvatar error: ' + error.message);
+    }
+  };
+
+  return {updateAvatar, deleteAvatar};
+};
+
 export {
   useLoadMedia,
   useLogin,
@@ -455,4 +496,5 @@ export {
   useComment,
   useLoadComments,
   useRating,
+  useAvatar,
 };
