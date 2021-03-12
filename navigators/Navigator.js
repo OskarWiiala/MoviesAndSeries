@@ -22,6 +22,8 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import {Image} from 'react-native';
 import UploadAvatar from '../views/UploadAvatar';
 
+//** Navigator for different pages */
+
 const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
 

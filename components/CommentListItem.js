@@ -10,6 +10,11 @@ import {Text} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ListItem from './ListItem';
 
+/** Adds the account that has posted the comment
+ *  Time when the comment was made
+ *  The comment itself
+ *  And delete button for the comment
+ */
 const CommentListItem = ({navigation, singleMedia, isMyComment}) => {
   const {deleteComment} = useComment();
   const {setUpdate, update} = useContext(MainContext);

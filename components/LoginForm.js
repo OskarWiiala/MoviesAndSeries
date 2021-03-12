@@ -7,6 +7,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useLogin} from '../hooks/ApiHooks';
 import useLoginForm from '../hooks/LoginHooks';
 
+/** Makes the login form */
+
 const LoginForm = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const {inputs, handleInputChange} = useLoginForm();

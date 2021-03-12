@@ -16,6 +16,8 @@ import {useComment} from '../hooks/ApiHooks';
 import {Card, ListItem, Text, Button, Input} from 'react-native-elements';
 import useCommentForm from '../hooks/CommentHooks';
 
+
+
 const Comment = ({navigation, route}) => {
   const {file} = route.params;
   const [loading, setLoading] = useState(false);

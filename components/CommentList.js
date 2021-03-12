@@ -5,7 +5,7 @@ import CommentListItem from './CommentListItem';
 import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
 import {MainProvider} from '../contexts/MainContext';
-
+/*Loads up commentlist for every review.*/
 const CommentList = ({navigation, route}) => {
   // const {file} = route.params;
   const {isLoggedIn, user} = useContext(MainContext);

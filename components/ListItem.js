@@ -16,6 +16,12 @@ import Single from '../views/Single';
 import {Text} from 'react-native';
 import {useIsFocused, useFocusEffect} from '@react-navigation/native';
 
+/** Makes the specific review for home page
+ *  So adds account that made the review
+ *  Shortened version of the description
+ *  Modify and delete button if you're logged in
+ *  See review button which navigates to the specific review
+ */
 const ListItem = ({navigation, singleMedia, isMyFile}) => {
   // console.log(props);
   const {deleteFile} = useMedia();

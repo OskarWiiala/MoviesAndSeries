@@ -1,5 +1,7 @@
 import {useState} from 'react';
 
+/** Hooks for comments */
+
 const useCommentForm = () => {
   const [inputs, setInputs] = useState({
     comment: 'empty comment',

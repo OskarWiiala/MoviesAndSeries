@@ -8,6 +8,7 @@ import {useContext} from 'react';
 import {MainContext} from '../contexts/MainContext';
 import {Input, Button} from 'react-native-elements';
 
+/** Makes the register form */
 const RegisterForm = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {

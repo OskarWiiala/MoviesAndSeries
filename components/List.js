@@ -8,6 +8,7 @@ import {MainProvider} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Home from '../views/Home';
 
+/** Makes the review list for home page */
 const List = ({navigation, myFilesOnly, searchOnly, inputs, myFavouritesOnly}) => {
   const {isLoggedIn, user} = useContext(MainContext);
   const {mediaArray} = useLoadMedia(myFilesOnly, user.user_id, searchOnly, inputs, myFavouritesOnly,);

@@ -4,6 +4,9 @@ import {useContext, useEffect, useState} from 'react';
 import {MainContext} from '../contexts/MainContext';
 import {appIdentifier, baseUrl} from '../utils/Variables';
 
+/** Has all of the POST/PUT/DELETE funtions
+ *  that are used to for example POST stuff into API
+ */
 // general function for fetching (options default value is empty object)
 const doFetch = async (url, options = {}) => {
   const response = await fetch(url, options);
